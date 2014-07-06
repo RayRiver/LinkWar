@@ -1,0 +1,2 @@
+对“tolua++导出C++子类后在Lua中无法添加新成员”这一问题的初步分析
+http://my.oschina.net/SunLightJuly/blog/262880
