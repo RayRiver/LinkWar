@@ -6,7 +6,9 @@ local ObjectClass = class(OBJECT_NAME, function()
 end)
 
 function ObjectClass:ctor(isEnemy)
-    cc(self):addComponent("components.behavior.animation_controller"):exportMethods()
+    cc(self)
+    self:addComponent("components.behavior.animation_controller"):exportMethods()
+    self:addComponent("components.behavior.astar"):exportMethods()
     
     self:setNodeEventEnabled(true)
     
@@ -24,6 +26,7 @@ function ObjectClass:ctor(isEnemy)
     --self:loadAnimation("ani_green_link") 
     
     local drawNode = cc.DrawNode:create()
+    drawNode:setAnchorPoint(0.5, 0.5)
     self:addChild(drawNode)
     
     self:setContentSize(40, 40) 
@@ -41,6 +44,14 @@ function ObjectClass:ctor(isEnemy)
     
     
     self:scheduleUpdateWithPriorityLua(handler(self, self.onFrame), 0)
+end
+
+function ObjectClass:setGrid(n)
+    self.grid = n
+end
+
+function ObjectClass:setTargetGrid(n)
+    self.targetGrid = n
 end
 
 function ObjectClass:getDesiredPosition()
@@ -72,6 +83,27 @@ function ObjectClass:onExit()
 end
 
 function ObjectClass:onFrame()
+    if self.path and #self.path > 0 then
+        local grid = self.path[#self.path]
+        if self.grid == grid then
+            self.path[#self.path] = nil
+            if #self.path == 0 then
+                return
+            end
+            grid = self.path[#self.path]
+        end
+        
+        local x, y = self.scene:grid2pos(grid)
+        local pt = cc.pSub(cc.p(x,y), self:pos())
+        pt = cc.pNormalize(pt)
+        self.desiredX = x+pt.x*2
+        self.desiredY = y+pt.y*2
+        
+    end
+    do return end
+
+
+
     if self.state == 1 then
         local x, y = self:getPosition()
         if self.isEnemy then
@@ -93,6 +125,18 @@ function ObjectClass:onFrame()
 end
 
 function ObjectClass:onEvaluate(scene)
+    self.scene = scene
+
+    if self.targetGrid and self.targetGrid ~= self.grid then
+        local x = self.grid % scene.w
+        local y = (self.grid - x) / scene.w
+        local target_x = self.targetGrid % scene.w
+        local target_y = (self.targetGrid - target_x) / scene.w
+        self:setMapInfo(scene.grid, scene.w, scene.h)
+        self.path = self:findPath(y*scene.w+x, target_y*scene.w+target_x)
+    end
+    do return end
+
     self.state = 1
     
     if self.isEnemy then

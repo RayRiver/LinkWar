@@ -15,6 +15,7 @@ cc.GameObject = import(".game_object")
 local components = {
     "components.behavior.state_machine",
     "components.behavior.animation_controller",
+    "components.behavior.astar",
 }
 for _, packageName in ipairs(components) do
     cc.Registry.add(import("." .. packageName), packageName)
@@ -31,3 +32,4 @@ ccmt.__call = function(self, target)
 end
 setmetatable(cc, ccmt)
 
+ds = import(".ds.init")
