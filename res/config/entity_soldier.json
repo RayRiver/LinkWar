@@ -1,0 +1,22 @@
+{
+	"maxhp": 5.0,
+	"atk": 1.0,
+
+	"move_speed": 1.0,
+	"hitbox": {
+		"x": -20,
+		"y": -20,
+		"w": 40,
+		"h": 40
+	},
+	"attack_area": {
+		"x": -60,
+		"y": -60,
+		"w": 120,
+		"h": 120
+	},
+	"behavior": "config/bt_soldier.json",
+	"behavior_interval": 0.1,
+
+	"": ""
+}

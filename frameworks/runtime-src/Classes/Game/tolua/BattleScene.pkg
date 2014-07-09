@@ -1,0 +1,4 @@
+class BattleScene : public cc.Scene
+{
+	static cocos2d::Scene *createScene();
+};

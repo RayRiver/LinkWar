@@ -1,0 +1,55 @@
+{
+	"class": "BTNodePrioritySelector",
+	"desc": "控制：带优先级选择",
+	"children":
+	[	
+		{
+			"class": "BTNodeAction",
+			"imp": "NOD_Die",
+			"desc": "行为：死亡",
+			"precondition": {
+				"class": "BTPrecondition",
+				"imp": "CON_HP0"
+			},
+			"precondition_desc": "前提：hp为0"
+		},
+		{
+			"class": "BTNodeAction",
+			"imp": "NOD_MoveToBattleField",
+			"desc": "行为：移动到战场",
+			"precondition": {
+				"class": "BTPreconditionNOT",
+				"lhs": {
+					"class": "BTPrecondition",
+					"imp": "CON_ReachedBattleField"
+				}
+			},
+			"precondition_desc": "前提：尚未移动到战场"
+		},
+		{
+			"class": "BTNodeAction",
+			"imp": "NOD_Attack",
+			"desc": "行为：攻击",
+			"precondition": {
+				"class": "BTPrecondition",
+				"imp": "CON_EnemyCanAttack"
+			},
+			"precondition_desc": "前提：目标敌人可以攻击"
+		},
+		{
+			"class": "BTNodeAction",
+			"imp": "NOD_MoveToAttack",
+			"desc": "行为：移动去攻击",
+			"precondition": {
+				"class": "BTPrecondition",
+				"imp": "CON_FoundEnemy"
+			},
+			"precondition_desc": "前提：发现敌人"
+		},
+		{
+			"class": "BTNodeAction",
+			"imp": "NOD_Idle",
+			"desc": "行为：空闲"
+		}
+	]
+}
