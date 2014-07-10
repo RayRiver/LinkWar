@@ -136,6 +136,9 @@
     <ClInclude Include="..\Classes\Game\Battle\CON_HP0.h">
       <Filter>Game\Battle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\AStar.h">
+      <Filter>Game\Battle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
@@ -241,6 +244,9 @@
       <Filter>Game\Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\CON_HP0.cpp">
+      <Filter>Game\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\AStar.cpp">
       <Filter>Game\Battle</Filter>
     </ClCompile>
   </ItemGroup>

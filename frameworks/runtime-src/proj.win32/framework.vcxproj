@@ -187,6 +187,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\ConfigParser.h" />
+    <ClInclude Include="..\Classes\Game\Battle\AStar.h" />
     <ClInclude Include="..\Classes\Game\Battle\BattleScene.h" />
     <ClInclude Include="..\Classes\Game\Battle\BehaviorComponent.h" />
     <ClInclude Include="..\Classes\Game\Battle\BlackBoard.h" />
@@ -226,6 +227,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\ConfigParser.cpp" />
+    <ClCompile Include="..\Classes\Game\Battle\AStar.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BattleScene.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BehaviorComponent.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BlackBoard.cpp" />

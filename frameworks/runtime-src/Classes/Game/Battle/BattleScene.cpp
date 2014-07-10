@@ -7,6 +7,8 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BTDebugRenderer.h"
 
+#include "Helper/Display.h"
+
 USING_NS_CC;
 
 const int RECT_POINTS = 4;
@@ -18,12 +20,31 @@ cocos2d::Scene * BattleScene::createScene()
 	return scene;
 }
 
+BattleScene::BattleScene()
+{
+
+}
+
+BattleScene::~BattleScene()
+{
+	if (m_map)
+	{
+		delete m_map;
+		m_map = nullptr;
+	}
+}
+
 bool BattleScene::init()
 {
 	if (!Scene::init())
 	{
 		return false;
 	}
+
+	m_mapW = ((int)display.width()) / GRID_SIZE;
+	m_mapH = ((int)display.height()) / GRID_SIZE;
+	m_map = new unsigned char[m_mapW*m_mapH];
+	memset(m_map, 0x00, m_mapW*m_mapH);
 
 	this->createGrid();
 	this->createLauncherArea();
@@ -57,6 +78,24 @@ bool BattleScene::init()
 
 void BattleScene::update( float dt )
 {
+	// update map
+	memset(m_map, 0x00, m_mapW*m_mapH);
+	for (auto soldier : m_selfSoldiers)
+	{
+		const auto &pos = soldier->getPosition();
+		auto x = (int)pos.x / GRID_SIZE;
+		auto y = (int)pos.y / GRID_SIZE;
+		m_map[y*m_mapW+x] = 0xff;
+	}
+	for (auto soldier : m_oppoSoldiers)
+	{
+		const auto &pos = soldier->getPosition();
+		auto x = (int)pos.x / GRID_SIZE;
+		auto y = (int)pos.y / GRID_SIZE;
+		m_map[y*m_mapW+x] = 0xff;
+	}
+	
+
 	std::set<GameEntity *> cleanSelfEntities;
 	for (auto soldier : m_selfSoldiers)
 	{
@@ -171,4 +210,10 @@ void BattleScene::createBTDebugRenderer( BTNode *node )
 		isCreated = true;
 	}
 }
+
+int BattleScene::getGridSize()
+{
+	return GRID_SIZE;
+}
+
 

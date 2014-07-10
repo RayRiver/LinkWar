@@ -12,29 +12,38 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 	auto scene = inputData.scene;
 	auto self = inputData.self;
 
+	auto pos = self->getPosition();
+	float distance2 = 0.0f;
+
 	// find attack target
 	GameEntity *foundEntity = nullptr;
 	if (self->isEnemy())
 	{
-		float y = 0.0f;
 		for (const auto &entity : scene->getSelfSoldiers())
 		{
-			if (!entity->shouldClean() && y < entity->getPositionY())
+			if (!entity->shouldClean())
 			{
-				y = entity->getPositionY();
-				foundEntity = entity;
+				float d2 = (entity->getPosition() - pos).lengthSquared();
+				if (!foundEntity || d2 < distance2)
+				{
+					distance2 = d2;
+					foundEntity = entity;
+				}
 			}
 		}	
 	}
 	else
 	{
-		float y = display.top();
 		for (const auto &entity : scene->getOppoSoldiers())
 		{
-			if (!entity->shouldClean() && y > entity->getPositionY())
+			if (!entity->shouldClean())
 			{
-				y = entity->getPositionY();
-				foundEntity = entity;
+				float d2 = (entity->getPosition() - pos).lengthSquared();
+				if (!foundEntity || d2 < distance2)
+				{
+					distance2 = d2;
+					foundEntity = entity;
+				};
 			}
 		}	
 	}

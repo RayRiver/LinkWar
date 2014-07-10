@@ -10,6 +10,9 @@ class GameEntity;
 class BattleScene : public cocos2d::Scene
 {
 public:
+	BattleScene();
+	~BattleScene();
+
 	static cocos2d::Scene *createScene();
 	virtual bool init();
 	CREATE_FUNC(BattleScene);
@@ -26,6 +29,11 @@ public:
 	inline const std::set<GameEntity *> &getSelfSoldiers() { return m_selfSoldiers; }
 	inline const std::set<GameEntity *> &getOppoSoldiers() { return m_oppoSoldiers; }
 
+	inline unsigned char *getMap() { return m_map; }
+	inline int getMapW() { return m_mapW; }
+	inline int getMapH() { return m_mapH; }
+	int getGridSize();
+
 private:
 	cocos2d::DrawNode *m_drawNode;
 	cocos2d::Rect m_selfLauncherArea;
@@ -35,6 +43,9 @@ private:
 	std::set<GameEntity *> m_selfSoldiers;
 	std::set<GameEntity *> m_oppoSoldiers;
 
+	unsigned char *m_map;
+	int m_mapW;
+	int m_mapH;
 };
 
 #endif // BattleScene_h__

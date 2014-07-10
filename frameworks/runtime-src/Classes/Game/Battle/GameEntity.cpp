@@ -7,6 +7,7 @@
 #include "BehaviorComponent.h"
 #include "BattleScene.h"
 #include "Helper/Display.h"
+#include "AStar.h"
 
 USING_NS_CC;
 using namespace cocostudio;
@@ -68,6 +69,10 @@ bool GameEntity::init( const char *filename, BattleScene *scene, bool isEnemy )
 
 void GameEntity::onFrame( float dt )
 {
+	// load current map
+	m_pathFinder.loadMap(m_blackboard.scene->getMap(), m_blackboard.scene->getMapW(), m_blackboard.scene->getMapH());
+
+	// AI evaluate
 	m_currentBehaviorInterval += dt;
 	if (m_currentBehaviorInterval > m_behaviorInterval)
 	{
@@ -75,13 +80,39 @@ void GameEntity::onFrame( float dt )
 		m_currentBehaviorInterval -= m_behaviorInterval;
 	}
 
+	// frame action
 	if (m_state == State::Move)
 	{
 		auto pos = getPosition();
-		if (pos != m_moveTarget)
+		auto target = m_moveTarget;
+		auto current_grid = _position2grid(pos);
+		auto target_grid = _position2grid(target);
+		if (current_grid != target_grid)
 		{
-			auto pt = m_moveTarget - pos;
-			if (pt.lengthSquared() > 1.0f)
+			m_pathFinder.setOrigin(current_grid);
+			m_pathFinder.setDestination(target_grid);
+			if (m_pathFinder.findPath())
+			{
+				target_grid = m_pathFinder.getPath().back();
+				m_pathFinder.getPath().pop_back();
+				target = _grid2position(target_grid);
+			}
+			else
+			{
+				target = pos;
+			}
+		}
+		else if (m_pathFinder.getPath().size() > 0)
+		{
+			target_grid = m_pathFinder.getPath().back();
+			m_pathFinder.getPath().pop_back();
+			target = _grid2position(target_grid);
+		}
+
+		if (target != pos)
+		{
+			auto pt = target - pos;
+			if (pt.lengthSquared() > m_moveSpeed*m_moveSpeed)
 			{
 				pt.normalize();
 				pt *= m_moveSpeed;
@@ -96,16 +127,44 @@ void GameEntity::onFrame( float dt )
 			m_state = State::Idle;
 		}
 	}
+	else if (m_state == State::MoveToAttack && !getAttackTarget())
+	{
+		//m_state = State::Idle;	
+	}
 	else if (m_state == State::MoveToAttack)
 	{
 		auto pos = getPosition();
+		auto target = this->getAttackTarget()->getPosition();
+		auto current_grid = _position2grid(pos);
+		auto target_grid = _position2grid(target);
+		if (current_grid != target_grid)
+		{
+			m_pathFinder.setOrigin(current_grid);
+			m_pathFinder.setDestination(target_grid);
+			if (m_pathFinder.findPath())
+			{
+				target_grid = m_pathFinder.getPath().back();
+				m_pathFinder.getPath().pop_back();
+				target = _grid2position(target_grid);
+			}
+			else
+			{
+				target = pos;
+			}
+		}
+		else if (m_pathFinder.getPath().size() > 0)
+		{
+			target_grid = m_pathFinder.getPath().back();
+			m_pathFinder.getPath().pop_back();
+			target = _grid2position(target_grid);
+		}
+
 		if (this->getAttackTarget())
 		{
-			const auto &moveTarget = this->getAttackTarget()->getPosition();
-			if (pos != moveTarget)
+			if (pos != target)
 			{
-				auto pt = moveTarget - pos;
-				if (pt.lengthSquared() > 1.0f)
+				auto pt = target - pos;
+				if (pt.lengthSquared() > m_moveSpeed*m_moveSpeed)
 				{
 					pt.normalize();
 					pt *= m_moveSpeed;
@@ -432,7 +491,7 @@ void GameEntity::setAttackTarget( GameEntity *target )
 		if (m_attackTarget)
 		{
 			m_attackTarget->lockSet().erase(this);	
-			log("0x%08x cancel lock on 0x%08x", this, m_attackTarget);
+			//log("0x%08x cancel lock on 0x%08x", this, m_attackTarget);
 			m_attackTarget = nullptr;
 		}
 
@@ -440,9 +499,27 @@ void GameEntity::setAttackTarget( GameEntity *target )
 		{
 			target->lockSet().insert(this);
 			m_attackTarget = target; 
-			log("0x%08x lock on 0x%08x", this, target);
+			//log("0x%08x lock on 0x%08x", this, target);
 		}
 	}
 
+}
+
+cocos2d::Vec2 GameEntity::_position2grid( const cocos2d::Vec2 &pos )
+{
+	auto grid_size = m_blackboard.scene->getGridSize();
+	Vec2 v;
+	v.x = ((int)pos.x) / grid_size;
+	v.y = ((int)pos.y) / grid_size;
+	return v;
+}
+
+cocos2d::Vec2 GameEntity::_grid2position( const cocos2d::Vec2 &grid )
+{
+	auto grid_size = m_blackboard.scene->getGridSize();
+	Vec2 v;
+	v.x = (grid.x + 0.5) * grid_size;
+	v.y = (grid.y + 0.5) * grid_size;
+	return v;
 }
 
