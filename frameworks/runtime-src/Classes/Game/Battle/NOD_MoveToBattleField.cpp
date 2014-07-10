@@ -47,7 +47,7 @@ BTRunningStatus NOD_MoveToBattleField::onExecute( const BTInputParam& input, BTO
 	auto scene = inputData.scene;
 	auto self = inputData.self;
 
-	if (self->getState() == GameEntity::State::Idle)
+	if (self->getPosition() == self->getMoveTarget())
 	{
 		self->setProperty("isReachedBattleField", LuaValue::booleanValue(true));
 		return BTRunningStatus::Finish;

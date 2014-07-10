@@ -69,7 +69,7 @@ bool GameEntity::init( const char *filename, BattleScene *scene, bool isEnemy )
 
 void GameEntity::onFrame( float dt )
 {
-	// load current map
+	// update map
 	m_pathFinder.loadMap(m_blackboard.scene->getMap(), m_blackboard.scene->getMapW(), m_blackboard.scene->getMapH());
 
 	// AI evaluate
@@ -83,97 +83,14 @@ void GameEntity::onFrame( float dt )
 	// frame action
 	if (m_state == State::Move)
 	{
-		auto pos = getPosition();
-		auto target = m_moveTarget;
-		auto current_grid = _position2grid(pos);
-		auto target_grid = _position2grid(target);
-		if (current_grid != target_grid)
-		{
-			m_pathFinder.setOrigin(current_grid);
-			m_pathFinder.setDestination(target_grid);
-			if (m_pathFinder.findPath())
-			{
-				target_grid = m_pathFinder.getPath().back();
-				m_pathFinder.getPath().pop_back();
-				target = _grid2position(target_grid);
-			}
-			else
-			{
-				target = pos;
-			}
-		}
-		else if (m_pathFinder.getPath().size() > 0)
-		{
-			target_grid = m_pathFinder.getPath().back();
-			m_pathFinder.getPath().pop_back();
-			target = _grid2position(target_grid);
-		}
-
-		if (target != pos)
-		{
-			auto pt = target - pos;
-			if (pt.lengthSquared() > m_moveSpeed*m_moveSpeed)
-			{
-				pt.normalize();
-				pt *= m_moveSpeed;
-			}
-			pt.x += pos.x;
-			pt.y += pos.y;
-			this->setPosition(pt);
-			this->updateZOrder();	
-		}
-		else
-		{
-			m_state = State::Idle;
-		}
-	}
-	else if (m_state == State::MoveToAttack && !getAttackTarget())
-	{
-		//m_state = State::Idle;	
+		moveToPosition(m_moveTarget);
 	}
 	else if (m_state == State::MoveToAttack)
 	{
-		auto pos = getPosition();
-		auto target = this->getAttackTarget()->getPosition();
-		auto current_grid = _position2grid(pos);
-		auto target_grid = _position2grid(target);
-		if (current_grid != target_grid)
+		auto attackTarget = getAttackTarget();
+		if (attackTarget)
 		{
-			m_pathFinder.setOrigin(current_grid);
-			m_pathFinder.setDestination(target_grid);
-			if (m_pathFinder.findPath())
-			{
-				target_grid = m_pathFinder.getPath().back();
-				m_pathFinder.getPath().pop_back();
-				target = _grid2position(target_grid);
-			}
-			else
-			{
-				target = pos;
-			}
-		}
-		else if (m_pathFinder.getPath().size() > 0)
-		{
-			target_grid = m_pathFinder.getPath().back();
-			m_pathFinder.getPath().pop_back();
-			target = _grid2position(target_grid);
-		}
-
-		if (this->getAttackTarget())
-		{
-			if (pos != target)
-			{
-				auto pt = target - pos;
-				if (pt.lengthSquared() > m_moveSpeed*m_moveSpeed)
-				{
-					pt.normalize();
-					pt *= m_moveSpeed;
-				}
-				pt.x += pos.x;
-				pt.y += pos.y;
-				this->setPosition(pt);
-				this->updateZOrder();	
-			}
+			moveToPosition(attackTarget->getPosition());
 		}
 	}
 	else if (m_state == State::Attack)
@@ -325,7 +242,8 @@ bool GameEntity::loadFromFile( const char *filename )
 		// show attack area
 		auto drawNode = DrawNode::create();
 		this->addChild(drawNode);
-		if (drawNode)
+		//if (drawNode)
+		if (0)
 		{
 			Vec2 verts[RECT_POINTS];
 			display.rect2points(m_attackArea, verts);
@@ -523,3 +441,65 @@ cocos2d::Vec2 GameEntity::_grid2position( const cocos2d::Vec2 &grid )
 	return v;
 }
 
+void GameEntity::moveToPosition( const cocos2d::Vec2 &targetPosition )
+{
+	auto pos = getPosition();
+	auto target = targetPosition;
+	auto current_grid = _position2grid(pos);
+	auto target_grid = _position2grid(target);
+
+	// 获取最近的路点
+	if (current_grid != target_grid)
+	{
+		if (m_pathFinder.getPath().size() > 0)
+		{
+			// 已经计算好的路径有效
+			// TODO: 什么情况下去clearPath?
+			target_grid = m_pathFinder.getPath().back();
+			target = _grid2position(target_grid);
+			if (pos == target && m_pathFinder.getPath().size() > 0) // 已抵达路点且后面还有
+			{
+				target_grid = m_pathFinder.getPath().back();
+				m_pathFinder.getPath().pop_back();
+				target = _grid2position(target_grid);
+			}
+		}
+		else
+		{
+			// 重新寻路
+			m_pathFinder.setOrigin(current_grid);
+			m_pathFinder.setDestination(target_grid);
+			if (m_pathFinder.findPath())
+			{
+				target_grid = m_pathFinder.getPath().back();
+				target = _grid2position(target_grid);
+				if (pos == target && m_pathFinder.getPath().size() > 0) // 已抵达路点且后面还有
+				{
+					target_grid = m_pathFinder.getPath().back();
+					m_pathFinder.getPath().pop_back();
+					target = _grid2position(target_grid);
+				};
+			}
+			else
+			{
+				// 寻路失败，暂时不动
+				target = pos;
+			}
+		}
+	}
+
+	// 移动到目标位置
+	if (target != pos)
+	{
+		auto pt = target - pos;
+		if (pt.lengthSquared() > m_moveSpeed*m_moveSpeed)
+		{
+			pt.normalize();
+			pt *= m_moveSpeed;
+		}
+		pt.x += pos.x;
+		pt.y += pos.y;
+		this->setPosition(pt);
+		this->updateZOrder();	
+	}
+}

@@ -1,4 +1,5 @@
 
+require("config")
 require("framework.init")
     
 local AppClass = class("AppClass")

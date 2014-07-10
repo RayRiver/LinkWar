@@ -41,6 +41,7 @@ public:
 	inline bool isEnemy() { return m_isEnemy; }
 
 	void updateZOrder();
+	void moveToPosition(const cocos2d::Vec2 &pos);
 
 	void idle();
 	void move(const cocos2d::Vec2 &pos);

@@ -1,5 +1,5 @@
 
-DEBUG_FPS = false
+DEBUG_FPS = true
 
 -- design resolution
 CONFIG_SCREEN_WIDTH = 640
