@@ -6,8 +6,9 @@
 
 #include "BehaviorComponent.h"
 #include "BattleScene.h"
-#include "Helper/Display.h"
 #include "AStar.h"
+#include "Helper/Display.h"
+#include "Helper/DebugInfo.h"
 
 USING_NS_CC;
 using namespace cocostudio;
@@ -274,12 +275,14 @@ void GameEntity::updateZOrder()
 
 void GameEntity::idle()
 {
+	m_pathFinder.clearPath();
 	this->stopAllActions();
 	this->setState(GameEntity::State::Idle);
 }
 
 void GameEntity::move( const cocos2d::Vec2 &pos )
 {
+	m_pathFinder.clearPath();
 	this->stopAllActions();
 	this->setMoveTarget(pos);
 	this->setState(GameEntity::State::Move);
@@ -287,12 +290,14 @@ void GameEntity::move( const cocos2d::Vec2 &pos )
 
 void GameEntity::moveToAttack()
 {
+	m_pathFinder.clearPath();
 	this->stopAllActions();
 	this->setState(GameEntity::State::MoveToAttack);
 }
 
 void GameEntity::attack()
 {
+	m_pathFinder.clearPath();
 	this->stopAllActions();
 	this->setState(GameEntity::State::Attack);
 
@@ -311,6 +316,8 @@ void GameEntity::attack()
 
 void GameEntity::hit( GameEntity * entity )
 {
+	m_pathFinder.clearPath();
+
 	LuaValue val;
 	float atk = 0.0f;
 	float hp = 1.0f;
@@ -338,6 +345,7 @@ void GameEntity::hit( GameEntity * entity )
 
 void GameEntity::die()
 {
+	m_pathFinder.clearPath();
 	this->stopAllActions();
 	this->setState(GameEntity::State::Die);
 
@@ -356,6 +364,10 @@ void GameEntity::die()
 	{
 		entity->setAttackTarget(nullptr);
 	}
+
+	auto pos = getPosition();
+	auto current_grid = _position2grid(pos);
+	m_blackboard.scene->mapNodeRelease(current_grid.x, current_grid.y);
 
 	m_bShouldClean = true;
 
@@ -423,16 +435,16 @@ void GameEntity::setAttackTarget( GameEntity *target )
 
 }
 
-cocos2d::Vec2 GameEntity::_position2grid( const cocos2d::Vec2 &pos )
+AStar::Point GameEntity::_position2grid( const cocos2d::Vec2 &pos )
 {
 	auto grid_size = m_blackboard.scene->getGridSize();
-	Vec2 v;
+	AStar::Point v;
 	v.x = ((int)pos.x) / grid_size;
 	v.y = ((int)pos.y) / grid_size;
 	return v;
 }
 
-cocos2d::Vec2 GameEntity::_grid2position( const cocos2d::Vec2 &grid )
+cocos2d::Vec2 GameEntity::_grid2position( const AStar::Point &grid )
 {
 	auto grid_size = m_blackboard.scene->getGridSize();
 	Vec2 v;
@@ -451,24 +463,55 @@ void GameEntity::moveToPosition( const cocos2d::Vec2 &targetPosition )
 	// 获取最近的路点
 	if (current_grid != target_grid)
 	{
+		bool bNeedFindPath = false;
 		if (m_pathFinder.getPath().size() > 0)
 		{
-			// 已经计算好的路径有效
-			// TODO: 什么情况下去clearPath?
-			target_grid = m_pathFinder.getPath().back();
-			target = _grid2position(target_grid);
-			if (pos == target && m_pathFinder.getPath().size() > 0) // 已抵达路点且后面还有
+			auto origin_target_grid = m_pathFinder.getPath().front();
+			if (origin_target_grid != target_grid)
 			{
+				// 目标位置已经和上次寻路的不同
+				bNeedFindPath = true;
+			}
+			else
+			{
+				// 已经计算好的路径有效
 				target_grid = m_pathFinder.getPath().back();
-				m_pathFinder.getPath().pop_back();
 				target = _grid2position(target_grid);
+				if (pos == target && m_pathFinder.getPath().size() > 0) // 已抵达路点且后面还有
+				{
+					target_grid = m_pathFinder.getPath().back();
+					m_pathFinder.getPath().pop_back();
+					target = _grid2position(target_grid);
+				}
 			}
 		}
 		else
 		{
+			bNeedFindPath = true;
+		}
+
+		// 目标点有障碍，需要重新寻路
+		if (!bNeedFindPath)
+		{
+			int ref = m_blackboard.scene->mapNodeRef(target_grid.x, target_grid.y);
+			if (current_grid == target_grid) --ref;
+			if (ref > 0)
+			{
+				m_pathFinder.clearPath();
+				bNeedFindPath = true;
+			}
+		}
+
+		if (bNeedFindPath)
+		{
 			// 重新寻路
 			m_pathFinder.setOrigin(current_grid);
 			m_pathFinder.setDestination(target_grid);
+
+			// debug find path count
+			DEBUGINFO_SETINT("find path count", DEBUGINFO_GETINT("find path count") + 1);
+
+			// find path
 			if (m_pathFinder.findPath())
 			{
 				target_grid = m_pathFinder.getPath().back();
@@ -478,12 +521,13 @@ void GameEntity::moveToPosition( const cocos2d::Vec2 &targetPosition )
 					target_grid = m_pathFinder.getPath().back();
 					m_pathFinder.getPath().pop_back();
 					target = _grid2position(target_grid);
-				};
+				}
 			}
 			else
 			{
 				// 寻路失败，暂时不动
 				target = pos;
+				target_grid = current_grid;
 			}
 		}
 	}
@@ -501,5 +545,13 @@ void GameEntity::moveToPosition( const cocos2d::Vec2 &targetPosition )
 		pt.y += pos.y;
 		this->setPosition(pt);
 		this->updateZOrder();	
+
+		// 更新map
+		auto current_grid2 = _position2grid(pt);
+		if (current_grid != current_grid2)
+		{
+			m_blackboard.scene->mapNodeRelease(current_grid.x, current_grid.y);
+			m_blackboard.scene->mapNodeRetain(current_grid2.x, current_grid2.y);
+		}
 	}
 }

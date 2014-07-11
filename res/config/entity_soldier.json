@@ -4,19 +4,19 @@
 
 	"move_speed": 1.0,
 	"hitbox": {
+		"x": -10,
+		"y": -10,
+		"w": 20,
+		"h": 20
+	},
+	"attack_area": {
 		"x": -20,
 		"y": -20,
 		"w": 40,
 		"h": 40
 	},
-	"attack_area": {
-		"x": -60,
-		"y": -60,
-		"w": 120,
-		"h": 120
-	},
 	"behavior": "config/bt_soldier.json",
-	"behavior_interval": 0.2,
+	"behavior_interval": 0.1,
 
 	"": ""
 }

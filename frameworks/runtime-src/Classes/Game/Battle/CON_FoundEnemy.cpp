@@ -12,6 +12,18 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 	auto scene = inputData.scene;
 	auto self = inputData.self;
 
+	/*
+	// 已经有攻击对象了,且该攻击对象可以攻击到
+	if (self->getState() == GameEntity::State::MoveToAttack && self->getAttackTarget())
+	{
+		auto attackTarget = self->getAttackTarget();
+		if (scene->canTargetBeAttacked(attackTarget))
+		{
+			return true;
+		}
+	}
+	*/
+
 	auto pos = self->getPosition();
 	float distance2 = 0.0f;
 

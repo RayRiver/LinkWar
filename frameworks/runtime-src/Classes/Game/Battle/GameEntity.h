@@ -78,8 +78,8 @@ public:
 	inline AStar &getPathFinder() { return m_pathFinder; }
 
 private:
-	cocos2d::Vec2 _position2grid(const cocos2d::Vec2 &pos);
-	cocos2d::Vec2 _grid2position(const cocos2d::Vec2 &grid);
+	AStar::Point _position2grid(const cocos2d::Vec2 &pos);
+	cocos2d::Vec2 _grid2position(const AStar::Point &grid);
 
 private:
 	typedef std::map<std::string, cocos2d::LuaValue> PROPERTY_MAP;

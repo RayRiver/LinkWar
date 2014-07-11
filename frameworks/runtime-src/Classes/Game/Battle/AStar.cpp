@@ -49,13 +49,13 @@ void AStar::loadMap( unsigned char * map, unsigned int w, unsigned int h )
 	m_mapH = h;
 }
 
-void AStar::setOrigin( const cocos2d::Vec2 &point )
+void AStar::setOrigin( const AStar::Point &point )
 {
 	m_orgX = point.x;
 	m_orgY = point.y;
 }
 
-void AStar::setDestination( const cocos2d::Vec2 &point )
+void AStar::setDestination( const AStar::Point &point )
 {
 	m_desX = point.x;
 	m_desY = point.y;
@@ -75,7 +75,7 @@ bool AStar::findPath()
 	Node *startNode = new Node;
 	startNode->point.x = m_orgX;
 	startNode->point.y = m_orgY;
-	int key = _vec2key(startNode->point);
+	int key = _point2key(startNode->point);
 
 	m_openList.push_back(startNode);
 	make_heap(m_openList.begin(), m_openList.end(), MinBinaryHeapCompare<Node *>());
@@ -97,9 +97,9 @@ bool AStar::findPath()
 		{
 			m_path.clear();
 			do {
-				m_path.push_back(Vec2(node->point.x, node->point.y));
+				m_path.push_back(AStar::Point(node->point.x, node->point.y));
 				node = node->parent;
-			} while ( node->parent );
+			} while ( node && node->parent ); // 扔掉开始的点
 			_clearNodes();
 			return true;
 		}
@@ -109,13 +109,13 @@ bool AStar::findPath()
 		// 4     6
 		// 7  8  9
 		_checkChild(node->point.x+1, node->point.y, node);		// 6
-		_checkChild(node->point.x+1, node->point.y-1, node);	// 3
-		_checkChild(node->point.x+1, node->point.y+1, node);	// 9
+		//_checkChild(node->point.x+1, node->point.y-1, node);	// 3
+		//_checkChild(node->point.x+1, node->point.y+1, node);	// 9
 		_checkChild(node->point.x, node->point.y-1,	node);		// 2
 		_checkChild(node->point.x, node->point.y+1, node);		// 8
-		_checkChild(node->point.x-1, node->point.y, node);		// 1
+		//_checkChild(node->point.x-1, node->point.y, node);		// 1
 		_checkChild(node->point.x-1, node->point.y-1, node);	// 4
-		_checkChild(node->point.x-1, node->point.y+1, node);	// 7
+		//_checkChild(node->point.x-1, node->point.y+1, node);	// 7
 	}
 
 	// 未找到

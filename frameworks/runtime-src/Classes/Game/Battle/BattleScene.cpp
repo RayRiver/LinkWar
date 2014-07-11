@@ -8,6 +8,7 @@
 #include "BehaviorTree/BTDebugRenderer.h"
 
 #include "Helper/Display.h"
+#include "Helper/DebugInfo.h"
 
 USING_NS_CC;
 
@@ -21,6 +22,7 @@ cocos2d::Scene * BattleScene::createScene()
 }
 
 BattleScene::BattleScene()
+	: m_debugDrawNode(nullptr)
 {
 
 }
@@ -41,14 +43,13 @@ bool BattleScene::init()
 		return false;
 	}
 
-	m_mapW = ((int)display.width()) / GRID_SIZE;
-	m_mapH = ((int)display.height()) / GRID_SIZE;
-	m_map = new unsigned char[m_mapW*m_mapH];
-	memset(m_map, 0x00, m_mapW*m_mapH);
-
 	this->createGrid();
+	this->createMap();
 	this->createLauncherArea();
 	this->createBattleFieldArea();
+
+
+	DEBUGINFO_INIT(this);
 
 	// touch event
 	auto listener = EventListenerTouchAllAtOnce::create();
@@ -79,6 +80,7 @@ bool BattleScene::init()
 void BattleScene::update( float dt )
 {
 	// update map
+	/*
 	memset(m_map, 0x00, m_mapW*m_mapH);
 	for (auto soldier : m_selfSoldiers)
 	{
@@ -94,6 +96,33 @@ void BattleScene::update( float dt )
 		auto y = (int)pos.y / GRID_SIZE;
 		m_map[y*m_mapW+x] = 0xff;
 	}
+	*/
+
+	// draw
+	if (!m_debugDrawNode)
+	{
+		m_debugDrawNode = DrawNode::create();
+		this->addChild(m_debugDrawNode);
+	}
+	if (m_debugDrawNode)
+	{
+		m_debugDrawNode->clear();
+		for (int y=0; y<m_mapH; ++y)
+		{
+			for (int x=0; x<m_mapW; ++x)
+			{
+				auto key = y * m_mapW + x;
+				if (m_map[key])
+				{
+					auto pos_x = x * GRID_SIZE;
+					auto pos_y = y * GRID_SIZE;
+					Vec2 verts[] = { Vec2(pos_x, pos_y), Vec2(pos_x, pos_y+GRID_SIZE), Vec2(pos_x+GRID_SIZE, pos_y+GRID_SIZE), Vec2(pos_x+GRID_SIZE, pos_y) };
+					m_debugDrawNode->drawPolygon(verts, 4, Color4F(1.0f, 1.0f, 1.0f, 0.4f), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 0.8f));
+				}
+			}
+		}
+	}
+
 	
 
 	std::set<GameEntity *> cleanSelfEntities;
@@ -214,6 +243,68 @@ void BattleScene::createBTDebugRenderer( BTNode *node )
 int BattleScene::getGridSize()
 {
 	return GRID_SIZE;
+}
+
+void BattleScene::createMap()
+{
+	m_mapW = ((int)display.width()) / GRID_SIZE;
+	m_mapH = ((int)display.height()) / GRID_SIZE;
+	m_map = new unsigned char[m_mapW*m_mapH];
+	memset(m_map, 0x00, m_mapW*m_mapH);
+
+	// test draw 
+	for (int y=0; y<m_mapH; ++y)
+	{
+		for (int x=0; x<m_mapW; ++x)
+		{
+			auto key = y * m_mapW + x;
+			if (x==0 || x==m_mapW-1)
+			{
+				m_map[key] = 0xff;
+			}
+		}
+	}
+	m_map[8*m_mapW+5] = 0xff;
+	m_map[8*m_mapW+6] = 0xff;
+	m_map[8*m_mapW+7] = 0xff;
+
+	// draw
+	for (int y=0; y<m_mapH; ++y)
+	{
+		for (int x=0; x<m_mapW; ++x)
+		{
+			auto key = y * m_mapW + x;
+			if (m_map[key])
+			{
+				auto pos_x = x * GRID_SIZE;
+				auto pos_y = y * GRID_SIZE;
+				Vec2 verts[] = { Vec2(pos_x, pos_y), Vec2(pos_x, pos_y+GRID_SIZE), Vec2(pos_x+GRID_SIZE, pos_y+GRID_SIZE), Vec2(pos_x+GRID_SIZE, pos_y) };
+				m_drawNode->drawPolygon(verts, 4, Color4F(1.0f, 1.0f, 1.0f, 0.8f), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
+			}
+		}
+	}
+}
+
+void BattleScene::mapNodeRetain( int x, int y )
+{
+	m_map[y*m_mapW+x] += 1;	
+}
+
+void BattleScene::mapNodeRelease( int x, int y )
+{
+	if (m_map[y*m_mapW+x] > 0)
+	{
+		m_map[y*m_mapW+x] -= 1;	
+	}
+	else
+	{
+		log("mapNodeRelease error, ref is 0: %d %d", x, y);	
+	}
+}
+
+int BattleScene::mapNodeRef( int x, int y )
+{
+	return m_map[y*m_mapW+x];
 }
 
 
