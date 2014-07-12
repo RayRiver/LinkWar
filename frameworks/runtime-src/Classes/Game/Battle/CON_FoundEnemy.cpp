@@ -1,15 +1,16 @@
 #include "CON_FoundEnemy.h"
 
-#include "BlackBoard.h"
-#include "BattleScene.h"
-#include "GameEntity.h"
 #include "Helper/Display.h"
+
+#include "BlackBoard.h"
+#include "MapManager.h"
+#include "GameEntity.h"
 
 bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 {
 	const BlackBoard& inputData	= input.getRealData<BlackBoard>();
 
-	auto scene = inputData.scene;
+	auto map = inputData.mapManager;
 	auto self = inputData.self;
 
 	/*
@@ -31,7 +32,7 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 	GameEntity *foundEntity = nullptr;
 	if (self->isEnemy())
 	{
-		for (const auto &entity : scene->getSelfSoldiers())
+		for (const auto &entity : map->getSelfEntities())
 		{
 			if (!entity->shouldClean())
 			{
@@ -46,7 +47,7 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 	}
 	else
 	{
-		for (const auto &entity : scene->getOppoSoldiers())
+		for (const auto &entity : map->getOppoEntities())
 		{
 			if (!entity->shouldClean())
 			{

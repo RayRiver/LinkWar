@@ -1,6 +1,6 @@
 /*
 ** Lua binding: lua_cocos2dx_userext
-** Generated automatically by tolua++-1.0.92 on 07/08/14 11:13:03.
+** Generated automatically by tolua++-1.0.92 on 07/12/14 16:55:29.
 */
 
 /****************************************************************************
@@ -33,7 +33,7 @@
 #include "CCLuaValue.h"
 #include "LuaBasicConversions.h"
 
-#include "Battle/BattleScene.h"
+#include "Battle/MapManager.h"
 
 USING_NS_CC;
 
@@ -46,34 +46,35 @@ TOLUA_API int  tolua_lua_cocos2dx_userext_open (lua_State* tolua_S);
 /* function to register type */
 static void tolua_reg_types (lua_State* tolua_S)
 {
- tolua_usertype(tolua_S,"cc.Scene");
- tolua_usertype(tolua_S,"cocos2d::Scene");
- tolua_usertype(tolua_S,"BattleScene");
+ tolua_usertype(tolua_S,"MapManager");
+ tolua_usertype(tolua_S,"cc.Layer");
 }
 
-/* method: createScene of class  BattleScene */
-#ifndef TOLUA_DISABLE_tolua_lua_cocos2dx_userext_BattleScene_createScene00
-static int tolua_lua_cocos2dx_userext_BattleScene_createScene00(lua_State* tolua_S)
+/* method: create of class  MapManager */
+#ifndef TOLUA_DISABLE_tolua_lua_cocos2dx_userext_MapManager_create00
+static int tolua_lua_cocos2dx_userext_MapManager_create00(lua_State* tolua_S)
 {
 #ifndef TOLUA_RELEASE
  tolua_Error tolua_err;
  if (
-     !tolua_isusertable(tolua_S,1,"BattleScene",0,&tolua_err) ||
-     !tolua_isnoobj(tolua_S,2,&tolua_err)
+     !tolua_isusertable(tolua_S,1,"MapManager",0,&tolua_err) ||
+     !tolua_isstring(tolua_S,2,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,3,&tolua_err)
  )
   goto tolua_lerror;
  else
 #endif
  {
+  const char* config = ((const char*)  tolua_tostring(tolua_S,2,0));
   {
-   cocos2d::Scene* tolua_ret = (cocos2d::Scene*)  BattleScene::createScene();
-    tolua_pushusertype(tolua_S,(void*)tolua_ret,"cc.Scene");
+   MapManager* tolua_ret = (MapManager*)  MapManager::create(config);
+    tolua_pushusertype(tolua_S,(void*)tolua_ret,"MapManager");
   }
  }
  return 1;
 #ifndef TOLUA_RELEASE
  tolua_lerror:
- tolua_error(tolua_S,"#ferror in function 'createScene'.",&tolua_err);
+ tolua_error(tolua_S,"#ferror in function 'create'.",&tolua_err);
  return 0;
 #endif
 }
@@ -86,9 +87,9 @@ TOLUA_API int tolua_lua_cocos2dx_userext_open (lua_State* tolua_S)
  tolua_reg_types(tolua_S);
  tolua_module(tolua_S,NULL,0);
  tolua_beginmodule(tolua_S,NULL);
-  tolua_cclass(tolua_S,"BattleScene","BattleScene","cc.Scene",NULL);
-  tolua_beginmodule(tolua_S,"BattleScene");
-   tolua_function(tolua_S,"createScene",tolua_lua_cocos2dx_userext_BattleScene_createScene00);
+  tolua_cclass(tolua_S,"MapManager","MapManager","cc.Layer",NULL);
+  tolua_beginmodule(tolua_S,"MapManager");
+   tolua_function(tolua_S,"create",tolua_lua_cocos2dx_userext_MapManager_create00);
   tolua_endmodule(tolua_S);
  tolua_endmodule(tolua_S);
  return 1;

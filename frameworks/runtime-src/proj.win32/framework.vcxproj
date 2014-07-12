@@ -187,7 +187,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\ConfigParser.h" />
-    <ClInclude Include="..\Classes\Game\Battle\AStar.h" />
+    <ClInclude Include="..\Classes\Game\Battle\PathFinder.h" />
     <ClInclude Include="..\Classes\Game\Battle\BattleScene.h" />
     <ClInclude Include="..\Classes\Game\Battle\BehaviorComponent.h" />
     <ClInclude Include="..\Classes\Game\Battle\BlackBoard.h" />
@@ -196,6 +196,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Game\Battle\CON_HP0.h" />
     <ClInclude Include="..\Classes\Game\Battle\CON_ReachedBattleField.h" />
     <ClInclude Include="..\Classes\Game\Battle\GameEntity.h" />
+    <ClInclude Include="..\Classes\Game\Battle\MapManager.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_Attack.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_Die.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_Idle.h" />
@@ -228,7 +229,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\ConfigParser.cpp" />
-    <ClCompile Include="..\Classes\Game\Battle\AStar.cpp" />
+    <ClCompile Include="..\Classes\Game\Battle\PathFinder.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BattleScene.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BehaviorComponent.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BlackBoard.cpp" />
@@ -237,6 +238,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\Game\Battle\CON_HP0.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\CON_ReachedBattleField.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\GameEntity.cpp" />
+    <ClCompile Include="..\Classes\Game\Battle\MapManager.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_Attack.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_Die.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_Idle.cpp" />
@@ -306,7 +308,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <Image Include="res\game.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Classes\Game\tolua\BattleScene.pkg" />
+    <None Include="..\Classes\Game\tolua\MapManager.pkg" />
     <None Include="..\Classes\Game\tolua\lua_cocos2dx_userext.pkg" />
     <None Include="..\Classes\Game\tolua\tolua_builder.bat" />
     <None Include="..\Classes\Game\tolua\tolua_builder.lua" />

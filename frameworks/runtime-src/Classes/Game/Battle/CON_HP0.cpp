@@ -3,10 +3,11 @@
 #include "cocos2d.h"
 #include "CCLuaValue.h"
 
-#include "BlackBoard.h"
-#include "BattleScene.h"
-#include "GameEntity.h"
 #include "Helper/Display.h"
+
+#include "BlackBoard.h"
+#include "MapManager.h"
+#include "GameEntity.h"
 
 USING_NS_CC;
 
@@ -14,7 +15,6 @@ bool CON_HP0::onEvaluate(const BTInputParam& input) const
 {
 	const BlackBoard& inputData	= input.getRealData<BlackBoard>();
 
-	auto scene = inputData.scene;
 	auto self = inputData.self;
 
 	LuaValue val;

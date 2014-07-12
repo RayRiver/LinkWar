@@ -3,7 +3,7 @@
 USING_NS_CC;
 
 BlackBoard::BlackBoard()
-	: scene(nullptr)
+	: mapManager(nullptr)
 {
 
 }

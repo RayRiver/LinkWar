@@ -5,7 +5,7 @@
 
 #include "BlackBoard.h"
 #include "GameEntity.h"
-#include "BattleScene.h"
+#include "MapManager.h"
 
 USING_NS_CC;
 
@@ -13,10 +13,10 @@ void NOD_MoveToBattleField::onEnter( const BTInputParam &input )
 {
 	const BlackBoard &inputData = input.getRealData<BlackBoard>();
 
-	auto scene = inputData.scene;
+	auto map = inputData.mapManager;
 	auto self = inputData.self;
 
-	const auto &rect = scene->getBattleFieldArea();
+	const auto &rect = map->getBattleFieldArea();
 	const auto &pos = self->getPosition();
 	const auto &hitbox = self->getHitBox();
 
@@ -44,7 +44,7 @@ BTRunningStatus NOD_MoveToBattleField::onExecute( const BTInputParam& input, BTO
 	const BlackBoard &inputData = input.getRealData<BlackBoard>();
 	BlackBoard &outputData = output.getRealData<BlackBoard>();
 
-	auto scene = inputData.scene;
+	auto map = inputData.mapManager;
 	auto self = inputData.self;
 
 	if (self->getPosition() == self->getMoveTarget())

@@ -1,0 +1,4 @@
+class MapManager : public cc.Layer
+{
+	static MapManager *create(const char *config);
+};

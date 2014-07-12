@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 
-class BattleScene;
+class MapManager;
 class GameEntity;
 class BlackBoard
 {
@@ -11,7 +11,7 @@ public:
 	BlackBoard();
 	~BlackBoard();
 
-	BattleScene *scene;
+	MapManager *mapManager;
 	GameEntity *self;
 };
 

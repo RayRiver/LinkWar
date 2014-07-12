@@ -8,6 +8,11 @@ local SceneClass = class(SCENE_NAME, function()
 end)
 
 function SceneClass:ctor()
+    local map = MapManager:create("config/map1.json")
+    self:addChild(map)
+    do return end
+
+
     self.soldiers = {}
     self.enemies = {}
     

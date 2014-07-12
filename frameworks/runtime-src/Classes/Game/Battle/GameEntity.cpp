@@ -4,21 +4,21 @@
 #include "json/document.h"
 #include "editor-support/cocostudio/DictionaryHelper.h"
 
-#include "BehaviorComponent.h"
-#include "BattleScene.h"
-#include "AStar.h"
 #include "Helper/Display.h"
 #include "Helper/DebugInfo.h"
+
+#include "MapManager.h"
+#include "BehaviorComponent.h"
 
 USING_NS_CC;
 using namespace cocostudio;
 
 const int RECT_POINTS = 4;
 
-GameEntity * GameEntity::create( const char *filename, BattleScene *scene, bool isEnemy )
+GameEntity * GameEntity::create( const char *filename, MapManager *map, bool isEnemy )
 {
 	auto ret = new GameEntity;
-	if (ret && ret->init(filename, scene, isEnemy))
+	if (ret && ret->init(filename, map, isEnemy))
 	{
 		ret->autorelease();
 	}
@@ -30,7 +30,7 @@ GameEntity * GameEntity::create( const char *filename, BattleScene *scene, bool 
 	return ret;
 }
 
-bool GameEntity::init( const char *filename, BattleScene *scene, bool isEnemy )
+bool GameEntity::init( const char *filename, MapManager *map, bool isEnemy )
 {
 	if (!Node::init())
 	{
@@ -42,7 +42,8 @@ bool GameEntity::init( const char *filename, BattleScene *scene, bool isEnemy )
 	m_hitBox = Rect::ZERO;
 	m_isEnemy = isEnemy;
 
-	m_blackboard.scene = scene;
+	//m_blackboard.scene = scene;
+	m_blackboard.mapManager = map;
 	m_blackboard.self = this;
 
 	m_state = State::Idle;
@@ -58,21 +59,20 @@ bool GameEntity::init( const char *filename, BattleScene *scene, bool isEnemy )
 
 	m_attackTarget = nullptr;
 
+	m_pathFinder.init(map);
+
+	m_desireMove = false;
+
 	if (!this->loadFromFile(filename))
 	{
 		return false;
 	}
-
-	//this->schedule(schedule_selector(GameEntity::onEvaluate), m_behaviorInterval);
 
 	return true;
 }
 
 void GameEntity::onFrame( float dt )
 {
-	// update map
-	m_pathFinder.loadMap(m_blackboard.scene->getMap(), m_blackboard.scene->getMapW(), m_blackboard.scene->getMapH());
-
 	// AI evaluate
 	m_currentBehaviorInterval += dt;
 	if (m_currentBehaviorInterval > m_behaviorInterval)
@@ -81,17 +81,21 @@ void GameEntity::onFrame( float dt )
 		m_currentBehaviorInterval -= m_behaviorInterval;
 	}
 
+	m_desireMove = false;
+
 	// frame action
 	if (m_state == State::Move)
 	{
-		moveToPosition(m_moveTarget);
+		setDesiredPosition(m_moveTarget);
+		m_desireMove = true;
 	}
 	else if (m_state == State::MoveToAttack)
 	{
 		auto attackTarget = getAttackTarget();
 		if (attackTarget)
 		{
-			moveToPosition(attackTarget->getPosition());
+			setDesiredPosition(attackTarget->getPosition());
+			m_desireMove = true;
 		}
 	}
 	else if (m_state == State::Attack)
@@ -196,7 +200,6 @@ bool GameEntity::loadFromFile( const char *filename )
 		auto behavior = BehaviorComponent::create();
 		behavior->loadBehavior(behavior_config);
 		this->addComponent(behavior);
-		m_blackboard.scene->createBTDebugRenderer(behavior->getBehaviorRoot());
 	}
 
 	// parse behavior interval
@@ -351,7 +354,6 @@ void GameEntity::die()
 
 	log("entity die %s", this->isEnemy() ? "enemy" : "self");
 
-
 	this->setAttackTarget(nullptr);
 
 	// 清理所有瞄准该对象的目标
@@ -364,10 +366,6 @@ void GameEntity::die()
 	{
 		entity->setAttackTarget(nullptr);
 	}
-
-	auto pos = getPosition();
-	auto current_grid = _position2grid(pos);
-	m_blackboard.scene->mapNodeRelease(current_grid.x, current_grid.y);
 
 	m_bShouldClean = true;
 
@@ -421,7 +419,6 @@ void GameEntity::setAttackTarget( GameEntity *target )
 		if (m_attackTarget)
 		{
 			m_attackTarget->lockSet().erase(this);	
-			//log("0x%08x cancel lock on 0x%08x", this, m_attackTarget);
 			m_attackTarget = nullptr;
 		}
 
@@ -429,129 +426,7 @@ void GameEntity::setAttackTarget( GameEntity *target )
 		{
 			target->lockSet().insert(this);
 			m_attackTarget = target; 
-			//log("0x%08x lock on 0x%08x", this, target);
 		}
 	}
 
-}
-
-AStar::Point GameEntity::_position2grid( const cocos2d::Vec2 &pos )
-{
-	auto grid_size = m_blackboard.scene->getGridSize();
-	AStar::Point v;
-	v.x = ((int)pos.x) / grid_size;
-	v.y = ((int)pos.y) / grid_size;
-	return v;
-}
-
-cocos2d::Vec2 GameEntity::_grid2position( const AStar::Point &grid )
-{
-	auto grid_size = m_blackboard.scene->getGridSize();
-	Vec2 v;
-	v.x = (grid.x + 0.5) * grid_size;
-	v.y = (grid.y + 0.5) * grid_size;
-	return v;
-}
-
-void GameEntity::moveToPosition( const cocos2d::Vec2 &targetPosition )
-{
-	auto pos = getPosition();
-	auto target = targetPosition;
-	auto current_grid = _position2grid(pos);
-	auto target_grid = _position2grid(target);
-
-	// 获取最近的路点
-	if (current_grid != target_grid)
-	{
-		bool bNeedFindPath = false;
-		if (m_pathFinder.getPath().size() > 0)
-		{
-			auto origin_target_grid = m_pathFinder.getPath().front();
-			if (origin_target_grid != target_grid)
-			{
-				// 目标位置已经和上次寻路的不同
-				bNeedFindPath = true;
-			}
-			else
-			{
-				// 已经计算好的路径有效
-				target_grid = m_pathFinder.getPath().back();
-				target = _grid2position(target_grid);
-				if (pos == target && m_pathFinder.getPath().size() > 0) // 已抵达路点且后面还有
-				{
-					target_grid = m_pathFinder.getPath().back();
-					m_pathFinder.getPath().pop_back();
-					target = _grid2position(target_grid);
-				}
-			}
-		}
-		else
-		{
-			bNeedFindPath = true;
-		}
-
-		// 目标点有障碍，需要重新寻路
-		if (!bNeedFindPath)
-		{
-			int ref = m_blackboard.scene->mapNodeRef(target_grid.x, target_grid.y);
-			if (current_grid == target_grid) --ref;
-			if (ref > 0)
-			{
-				m_pathFinder.clearPath();
-				bNeedFindPath = true;
-			}
-		}
-
-		if (bNeedFindPath)
-		{
-			// 重新寻路
-			m_pathFinder.setOrigin(current_grid);
-			m_pathFinder.setDestination(target_grid);
-
-			// debug find path count
-			DEBUGINFO_SETINT("find path count", DEBUGINFO_GETINT("find path count") + 1);
-
-			// find path
-			if (m_pathFinder.findPath())
-			{
-				target_grid = m_pathFinder.getPath().back();
-				target = _grid2position(target_grid);
-				if (pos == target && m_pathFinder.getPath().size() > 0) // 已抵达路点且后面还有
-				{
-					target_grid = m_pathFinder.getPath().back();
-					m_pathFinder.getPath().pop_back();
-					target = _grid2position(target_grid);
-				}
-			}
-			else
-			{
-				// 寻路失败，暂时不动
-				target = pos;
-				target_grid = current_grid;
-			}
-		}
-	}
-
-	// 移动到目标位置
-	if (target != pos)
-	{
-		auto pt = target - pos;
-		if (pt.lengthSquared() > m_moveSpeed*m_moveSpeed)
-		{
-			pt.normalize();
-			pt *= m_moveSpeed;
-		}
-		pt.x += pos.x;
-		pt.y += pos.y;
-		this->setPosition(pt);
-		this->updateZOrder();	
-
-		// 更新map
-		auto current_grid2 = _position2grid(pt);
-		if (current_grid != current_grid2)
-		{
-			m_blackboard.scene->mapNodeRelease(current_grid.x, current_grid.y);
-			m_blackboard.scene->mapNodeRetain(current_grid2.x, current_grid2.y);
-		}
-	}
 }

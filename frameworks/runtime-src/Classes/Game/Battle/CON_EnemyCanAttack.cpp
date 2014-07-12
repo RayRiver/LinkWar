@@ -1,14 +1,14 @@
 #include "CON_EnemyCanAttack.h"
 
 #include "BlackBoard.h"
-#include "BattleScene.h"
+#include "MapManager.h"
 #include "GameEntity.h"
 
 bool CON_EnemyCanAttack::onEvaluate(const BTInputParam& input) const
 {
 	const BlackBoard& inputData	= input.getRealData<BlackBoard>();
 
-	auto scene = inputData.scene;
+	auto map = inputData.mapManager;
 	auto self = inputData.self;
 
 	auto area = self->getAttackArea();
@@ -19,7 +19,7 @@ bool CON_EnemyCanAttack::onEvaluate(const BTInputParam& input) const
 	GameEntity *foundEntity = nullptr;
 	if (self->isEnemy())
 	{
-		for (const auto &entity : scene->getSelfSoldiers())
+		for (const auto &entity : map->getSelfEntities())
 		{
 			if (!entity->shouldClean() && area.containsPoint(entity->getPosition()))	
 			{
@@ -29,7 +29,7 @@ bool CON_EnemyCanAttack::onEvaluate(const BTInputParam& input) const
 	}
 	else
 	{
-		for (const auto &entity : scene->getOppoSoldiers())
+		for (const auto &entity : map->getOppoEntities())
 		{
 			if (!entity->shouldClean() && area.containsPoint(entity->getPosition()))	
 			{

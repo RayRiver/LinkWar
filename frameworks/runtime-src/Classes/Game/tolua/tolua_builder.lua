@@ -7,7 +7,6 @@ _push_functions = _push_functions or {}
 
 local CCObjectTypes = {
     "Ref",
-	"Scene",
 }
 
 -- register CCObject types
@@ -97,7 +96,7 @@ function post_output_hook(package)
 #include "CCLuaValue.h"
 #include "LuaBasicConversions.h"
 
-#include "Battle/BattleScene.h"
+#include "Battle/MapManager.h"
 
 USING_NS_CC;
 
@@ -130,9 +129,6 @@ TOLUA_API int  tolua_userext_open (lua_State* tolua_S);]], [[]])
 
       replace('\t', '    ')
 
-	  -- replace for BattleScene
-      replace([[tolua_pushusertype(tolua_S,(void*)tolua_ret,"cocos2d::Scene");]], [[tolua_pushusertype(tolua_S,(void*)tolua_ret,"cc.Scene");]])      
-	  
 
     WRITE(result)
 end

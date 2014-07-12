@@ -9,9 +9,9 @@
 #include "CCLuaValue.h"
 
 #include "BlackBoard.h"
-#include "AStar.h"
+#include "PathFinder.h"
 
-class BattleScene;
+class MapManager;
 class GameEntity : public cocos2d::Node
 {
 public:
@@ -25,8 +25,8 @@ public:
 	};
 
 public:
-	static GameEntity *create(const char *filename, BattleScene *scene, bool isEnemy);
-	bool init(const char *filename, BattleScene *scene, bool isEnemy);
+	static GameEntity *create(const char *filename, MapManager *map, bool isEnemy);
+	bool init(const char *filename, MapManager *map, bool isEnemy);
 
 	bool loadFromFile(const char *filename);
 
@@ -75,11 +75,15 @@ public:
 
 	void updateHPBar();
 
-	inline AStar &getPathFinder() { return m_pathFinder; }
+	inline PathFinder &getPathFinder() { return m_pathFinder; }
 
-private:
-	AStar::Point _position2grid(const cocos2d::Vec2 &pos);
-	cocos2d::Vec2 _grid2position(const AStar::Point &grid);
+	inline float getMoveSpeed() { return m_moveSpeed; }
+	inline void setMoveSpeed(float moveSpeed) { m_moveSpeed = moveSpeed; }
+
+
+	inline bool desireMove() { return m_desireMove; }
+	inline void setDesiredPosition(const cocos2d::Vec2 &pos) { m_desiredPostition.x = pos.x; m_desiredPostition.y = pos.y; }
+	inline const cocos2d::Vec2 &getDesiredPosition() { return m_desiredPostition; }
 
 private:
 	typedef std::map<std::string, cocos2d::LuaValue> PROPERTY_MAP;
@@ -102,6 +106,7 @@ private:
 	GameEntity *m_attackTarget;
 	std::set<GameEntity *> m_lockSet; // 锁定该实体的实体列表
 
+	bool m_hasBehavior;
 	float m_behaviorInterval;
 
 	bool m_bShouldClean;
@@ -110,7 +115,10 @@ private:
 
 	float m_currentBehaviorInterval;
 
-	AStar m_pathFinder;
+	PathFinder m_pathFinder;
+
+	bool m_desireMove;
+	cocos2d::Vec2 m_desiredPostition;
 };
 
 #endif // GameEntity_h__
