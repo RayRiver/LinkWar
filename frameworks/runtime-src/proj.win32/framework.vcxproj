@@ -188,7 +188,6 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\ConfigParser.h" />
     <ClInclude Include="..\Classes\Game\Battle\PathFinder.h" />
-    <ClInclude Include="..\Classes\Game\Battle\BattleScene.h" />
     <ClInclude Include="..\Classes\Game\Battle\BehaviorComponent.h" />
     <ClInclude Include="..\Classes\Game\Battle\BlackBoard.h" />
     <ClInclude Include="..\Classes\Game\Battle\CON_EnemyCanAttack.h" />
@@ -230,7 +229,6 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\ConfigParser.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\PathFinder.cpp" />
-    <ClCompile Include="..\Classes\Game\Battle\BattleScene.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BehaviorComponent.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BlackBoard.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\CON_EnemyCanAttack.cpp" />
