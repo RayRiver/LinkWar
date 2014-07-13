@@ -7,7 +7,14 @@
 #include "json/document.h"
 #include "editor-support/cocostudio/DictionaryHelper.h"
 
+#include "Base/LuaValueList.h"
+#include "Base/NetManager.h"
+#include "Base/NetSocket.h"
+
+#include "MessageDef.h"
 #include "GameEntity.h"
+#include "LogicFrame.h"
+#include "UserData.h"
 
 USING_NS_CC;
 using namespace cocostudio;
@@ -78,6 +85,11 @@ bool MapManager::init(const char *config)
 
 	DEBUGINFO_INIT(this);
 
+	LogicFrameManager::getInstance()->init();
+
+	LuaValueList args;	
+	GetNetImp()->writePacket(NET_CS_READY, args);
+
 	// touch event
 	auto listener = EventListenerTouchAllAtOnce::create();
 	listener->onTouchesBegan = [=](const std::vector<Touch*> &touches, Event *event) {
@@ -86,6 +98,7 @@ bool MapManager::init(const char *config)
 			const Vec2 &point = touch->getLocation();
 			if (this->m_selfLauncherArea.containsPoint(point))
 			{
+				/*
 				// create entity
 				this->createEntity(false, point);
 
@@ -94,6 +107,12 @@ bool MapManager::init(const char *config)
 				p.x = rand() % (int)(m_oppoLauncherArea.size.width) + (int)(m_oppoLauncherArea.origin.x);
 				p.y = rand() % (int)(m_oppoLauncherArea.size.height) + (int)(m_oppoLauncherArea.origin.y);
 				this->createEntity(true, p);
+				*/
+
+				LuaValueList args;	
+				args.pushFloat(point.x);
+				args.pushFloat(point.y);
+				GetNetImp()->writePacket(NET_CS_CREATE_ENTITY, args);
 			}
 		}
 	};
@@ -107,57 +126,78 @@ bool MapManager::init(const char *config)
 
 void MapManager::update( float dt )
 {
-	std::set<GameEntity *> cleanSelfEntities;
-	for (auto entity : m_selfEntities)
+	while (true)
 	{
-		if (entity->shouldClean())
+		auto frame = LogicFrameManager::getInstance()->getFrame();
+		if (!frame)
 		{
-			cleanSelfEntities.insert(entity);
+			// no frame
+			return;
 		}
-		else
+
+		// handle frame
+		for (auto action : frame->actions)
 		{
-			entity->onFrame(dt);
-			if (entity->desireMove())
+			this->handleFrame(action);
+		}
+
+		// debug logic frame index
+		DEBUGINFO_SETINT("logic frame index", LogicFrameManager::getInstance()->getCurrentFrameIndex());
+
+
+		std::set<GameEntity *> cleanSelfEntities;
+		for (auto entity : m_selfEntities)
+		{
+			if (entity->shouldClean())
 			{
-				this->moveEntity(entity);
+				cleanSelfEntities.insert(entity);
+			}
+			else
+			{
+				entity->onFrame(dt);
+				if (entity->desireMove())
+				{
+					this->moveEntity(entity);
+				}
 			}
 		}
-	}
-	std::set<GameEntity *> cleanOppoEntities;
-	for (auto entity : m_oppoEntities)
-	{
-		if (entity->shouldClean())
+		std::set<GameEntity *> cleanOppoEntities;
+		for (auto entity : m_oppoEntities)
 		{
-			cleanOppoEntities.insert(entity);
-		}
-		else
-		{
-			entity->onFrame(dt);
-			if (entity->desireMove())
+			if (entity->shouldClean())
 			{
-				this->moveEntity(entity);
+				cleanOppoEntities.insert(entity);
+			}
+			else
+			{
+				entity->onFrame(dt);
+				if (entity->desireMove())
+				{
+					this->moveEntity(entity);
+				}
 			}
 		}
-	}
 
-	// clean children
-	for (auto entity : cleanSelfEntities)
-	{
-		auto pos = entity->getPosition();
-		auto current_grid = pos2grid(pos);
-		releaseGrid(current_grid.x, current_grid.y);
+		// clean children
+		for (auto entity : cleanSelfEntities)
+		{
+			auto pos = entity->getPosition();
+			auto current_grid = pos2grid(pos);
+			releaseGrid(current_grid.x, current_grid.y);
 
-		m_selfEntities.erase(entity);
-		this->removeChild(entity);
-	}
-	for (auto entity : cleanOppoEntities)
-	{
-		auto pos = entity->getPosition();
-		auto current_grid = pos2grid(pos);
-		releaseGrid(current_grid.x, current_grid.y);
+			m_selfEntities.erase(entity);
+			this->removeChild(entity);
+		}
+		for (auto entity : cleanOppoEntities)
+		{
+			auto pos = entity->getPosition();
+			auto current_grid = pos2grid(pos);
+			releaseGrid(current_grid.x, current_grid.y);
 
-		m_oppoEntities.erase(entity);
-		this->removeChild(entity);
+			m_oppoEntities.erase(entity);
+			this->removeChild(entity);
+		}
+
 	}
 }
 
@@ -434,6 +474,24 @@ void MapManager::moveEntity( GameEntity *entity )
 		{
 			this->releaseGrid(current_grid.x, current_grid.y);
 			this->retainGrid(current_grid2.x, current_grid2.y);
+		}
+	}
+}
+
+void MapManager::handleFrame( LogicFrameAction *action )
+{
+	if (action->uid == UserData::getInstance()->getUid())
+	{
+		if (action->type == LogicFrameAction::Type::CreateEntity)
+		{
+			this->createEntity(false, Vec2(action->x, action->y));
+		}
+	}
+	else
+	{
+		if (action->type == LogicFrameAction::Type::CreateEntity)
+		{
+			this->createEntity(true, Vec2(display.width()-action->x, display.height()-action->y));
 		}
 	}
 }

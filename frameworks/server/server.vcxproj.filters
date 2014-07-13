@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="main">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{c826d947-05fc-42a1-ad2b-2b2760f411ad}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="NetManager.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="NetSocket.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="NetDef.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamBuffer.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadManager.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadObj.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="BitStream.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="NetImp.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="VarList.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Var.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="UserData.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageDef.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="NetSocket.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="NetManager.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="StreamBuffer.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Sys.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadManager.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadObj.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="BitStream.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="NetImp.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="UserData.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

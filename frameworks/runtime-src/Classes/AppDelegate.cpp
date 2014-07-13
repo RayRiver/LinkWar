@@ -6,6 +6,8 @@
 #include "ConfigParser.h"
 
 #include "Helper/Utils.h"
+#include "Base/NetManager.h"
+#include "Base/NetSocket.h"
 
 using namespace CocosDenshion;
 
@@ -64,6 +66,10 @@ bool AppDelegate::applicationDidFinishLaunching()
 	luaopen_lua_cocos2dx_userext(engine->getLuaStack()->getLuaState());
 
 	Utils::init();
+
+	NetManager::instance()->start();	
+	GetNetImp()->connect("127.0.0.1", 30001);
+
     
 #if (COCOS2D_DEBUG>0)
     if (startRuntime())

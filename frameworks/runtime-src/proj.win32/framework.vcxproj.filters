@@ -34,6 +34,9 @@
     <Filter Include="Game\Battle\Map">
       <UniqueIdentifier>{1cd6d64d-bb3b-4f5d-95d5-ccfa915b30e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Base">
+      <UniqueIdentifier>{21e52025-73f1-44ad-a6da-15a75e0b6ab6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h">
@@ -151,6 +154,54 @@
     <ClInclude Include="..\Classes\Game\Battle\PathFinder.h">
       <Filter>Game\Battle\Map</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\LogicFrame.h">
+      <Filter>Game\Battle\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\Log.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\LuaValueList.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\NetDef.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\NetImp.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\NetManager.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\NetSocket.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\StreamBuffer.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\Sys.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\ThreadManager.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\ThreadObj.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\BitStream.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\EventDef.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\ITickable.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\MessageDef.h">
+      <Filter>Game\Battle\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\UserData.h">
+      <Filter>Game\Battle\Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
@@ -262,6 +313,39 @@
       <Filter>Game\Battle\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\PathFinder.cpp">
+      <Filter>Game\Battle\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\LogicFrame.cpp">
+      <Filter>Game\Battle\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Base\Log.cpp">
+      <Filter>Game\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Base\NetImp.cpp">
+      <Filter>Game\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Base\NetManager.cpp">
+      <Filter>Game\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Base\NetSocket.cpp">
+      <Filter>Game\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Base\StreamBuffer.cpp">
+      <Filter>Game\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Base\Sys.cpp">
+      <Filter>Game\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Base\ThreadManager.cpp">
+      <Filter>Game\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Base\ThreadObj.cpp">
+      <Filter>Game\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Base\BitStream.cpp">
+      <Filter>Game\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\UserData.cpp">
       <Filter>Game\Battle\Map</Filter>
     </ClCompile>
   </ItemGroup>

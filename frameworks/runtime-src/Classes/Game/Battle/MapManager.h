@@ -9,6 +9,7 @@ extern const int GRID_SIZE_W;
 extern const int GRID_SIZE_H;
 
 class GameEntity;
+struct LogicFrameAction;
 class MapManager : public cocos2d::Layer
 {
 public:
@@ -49,6 +50,8 @@ public:
 	GameEntity *createEntity(bool isEnemy, const cocos2d::Vec2 &pos);
 
 	void moveEntity(GameEntity *entity);
+
+	void handleFrame(LogicFrameAction *action);
 
 	inline const unsigned char *getMap() { return m_map; }
 	inline int getMapW() { return m_w; }

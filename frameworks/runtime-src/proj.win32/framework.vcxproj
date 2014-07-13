@@ -187,6 +187,21 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\ConfigParser.h" />
+    <ClInclude Include="..\Classes\Game\Base\BitStream.h" />
+    <ClInclude Include="..\Classes\Game\Base\EventDef.h" />
+    <ClInclude Include="..\Classes\Game\Base\ITickable.h" />
+    <ClInclude Include="..\Classes\Game\Base\Log.h" />
+    <ClInclude Include="..\Classes\Game\Base\LuaValueList.h" />
+    <ClInclude Include="..\Classes\Game\Base\NetDef.h" />
+    <ClInclude Include="..\Classes\Game\Base\NetImp.h" />
+    <ClInclude Include="..\Classes\Game\Base\NetManager.h" />
+    <ClInclude Include="..\Classes\Game\Base\NetSocket.h" />
+    <ClInclude Include="..\Classes\Game\Base\StreamBuffer.h" />
+    <ClInclude Include="..\Classes\Game\Base\Sys.h" />
+    <ClInclude Include="..\Classes\Game\Base\ThreadManager.h" />
+    <ClInclude Include="..\Classes\Game\Base\ThreadObj.h" />
+    <ClInclude Include="..\Classes\Game\Battle\LogicFrame.h" />
+    <ClInclude Include="..\Classes\Game\Battle\MessageDef.h" />
     <ClInclude Include="..\Classes\Game\Battle\PathFinder.h" />
     <ClInclude Include="..\Classes\Game\Battle\BehaviorComponent.h" />
     <ClInclude Include="..\Classes\Game\Battle\BlackBoard.h" />
@@ -201,6 +216,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Game\Battle\NOD_Idle.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_MoveToAttack.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_MoveToBattleField.h" />
+    <ClInclude Include="..\Classes\Game\Battle\UserData.h" />
     <ClInclude Include="..\Classes\Game\BehaviorTree\BehaviorTree.h" />
     <ClInclude Include="..\Classes\Game\BehaviorTree\BTDebugNode.h" />
     <ClInclude Include="..\Classes\Game\BehaviorTree\BTDebugRenderer.h" />
@@ -228,6 +244,16 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\ConfigParser.cpp" />
+    <ClCompile Include="..\Classes\Game\Base\BitStream.cpp" />
+    <ClCompile Include="..\Classes\Game\Base\Log.cpp" />
+    <ClCompile Include="..\Classes\Game\Base\NetImp.cpp" />
+    <ClCompile Include="..\Classes\Game\Base\NetManager.cpp" />
+    <ClCompile Include="..\Classes\Game\Base\NetSocket.cpp" />
+    <ClCompile Include="..\Classes\Game\Base\StreamBuffer.cpp" />
+    <ClCompile Include="..\Classes\Game\Base\Sys.cpp" />
+    <ClCompile Include="..\Classes\Game\Base\ThreadManager.cpp" />
+    <ClCompile Include="..\Classes\Game\Base\ThreadObj.cpp" />
+    <ClCompile Include="..\Classes\Game\Battle\LogicFrame.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\PathFinder.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BehaviorComponent.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BlackBoard.cpp" />
@@ -242,6 +268,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\Game\Battle\NOD_Idle.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_MoveToAttack.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_MoveToBattleField.cpp" />
+    <ClCompile Include="..\Classes\Game\Battle\UserData.cpp" />
     <ClCompile Include="..\Classes\Game\BehaviorTree\BTDebugNode.cpp" />
     <ClCompile Include="..\Classes\Game\BehaviorTree\BTDebugRenderer.cpp" />
     <ClCompile Include="..\Classes\Game\BehaviorTree\BTNode.cpp" />
