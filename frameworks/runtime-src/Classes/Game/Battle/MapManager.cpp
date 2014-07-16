@@ -99,6 +99,7 @@ bool MapManager::init(const char *config)
 		{
 			const Vec2 &point = touch->getLocation();
 
+			/*
 			if (this->m_selfLauncherArea.containsPoint(point))
 			{
 				// create entity
@@ -110,8 +111,8 @@ bool MapManager::init(const char *config)
 				p.y = rand() % (int)(m_oppoLauncherArea.size.height) + (int)(m_oppoLauncherArea.origin.y);
 				this->createEntity(++g_id, true, p);
 			}
+			*/
 
-			/*
 			if (UserData::getInstance()->getUid()==0 && this->m_selfLauncherArea.containsPoint(point))
 			{
 				LuaValueList args;	
@@ -126,7 +127,6 @@ bool MapManager::init(const char *config)
 				args.pushFloat(point.y);
 				GetNetImp()->writePacket(NET_CS_CREATE_ENTITY, args);
 			}
-			*/
 		}
 	};
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
@@ -139,9 +139,8 @@ bool MapManager::init(const char *config)
 
 void MapManager::update( float dt )
 {
-	//while (true)
+	while (true)
 	{
-		/*
 		auto frame = LogicFrameManager::getInstance()->getFrame();
 		if (!frame)
 		{
@@ -157,7 +156,6 @@ void MapManager::update( float dt )
 
 		// debug logic frame index
 		DEBUGINFO_SETINT("logic frame index", LogicFrameManager::getInstance()->getCurrentFrameIndex());
-		*/
 
 
 		std::map<int, GameEntity *> cleanSelfEntities;

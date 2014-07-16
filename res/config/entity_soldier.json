@@ -16,7 +16,7 @@
 		"h": 40
 	},
 	"behavior": "config/bt_soldier.json",
-	"behavior_interval": 0.1,
+	"behavior_interval_frames": 5,
 
 	"": ""
 }

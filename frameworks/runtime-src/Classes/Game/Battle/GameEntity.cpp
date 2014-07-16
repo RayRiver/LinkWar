@@ -52,11 +52,11 @@ bool GameEntity::init( const char *filename, int id, MapManager *map, bool isEne
 	m_moveSpeed = 0.0f;
 
 	m_attackArea = Rect::ZERO;
-	m_behaviorInterval = 1.0f;
+	m_behaviorIntervalFrames = 1;
 
 	m_bShouldClean = false;
 
-	m_currentBehaviorInterval = 0.0f;
+	m_currentBehaviorIntervalFrames = 0;
 
 	m_attackTarget = nullptr;
 
@@ -76,11 +76,11 @@ bool GameEntity::init( const char *filename, int id, MapManager *map, bool isEne
 void GameEntity::onFrame( float dt )
 {
 	// AI evaluate
-	m_currentBehaviorInterval += dt;
-	if (m_currentBehaviorInterval > m_behaviorInterval)
+	++m_currentBehaviorIntervalFrames;
+	if (m_currentBehaviorIntervalFrames > m_behaviorIntervalFrames)
 	{
-		this->onEvaluate(m_currentBehaviorInterval);
-		m_currentBehaviorInterval -= m_behaviorInterval;
+		this->onEvaluate(dt * m_behaviorIntervalFrames);
+		m_currentBehaviorIntervalFrames = 0;
 	}
 
 	m_desireMove = false;
@@ -216,7 +216,7 @@ bool GameEntity::loadFromFile( const char *filename )
 	}
 
 	// parse behavior interval
-	m_behaviorInterval = DICTOOL->getFloatValue_json(dict, "behavior_interval", m_behaviorInterval);
+	m_behaviorIntervalFrames = DICTOOL->getIntValue_json(dict, "behavior_interval_frames", m_behaviorIntervalFrames);
 
 	// parse hit box
 	auto hitboxExist = DICTOOL->checkObjectExist_json(dict, "hitbox");

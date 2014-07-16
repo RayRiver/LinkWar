@@ -111,13 +111,13 @@ private:
 	std::map<int, GameEntity *> m_lockSet; // 锁定该实体的实体列表
 
 	bool m_hasBehavior;
-	float m_behaviorInterval;
+	int m_behaviorIntervalFrames;
+	int m_currentBehaviorIntervalFrames;
 
 	bool m_bShouldClean;
 
 	cocos2d::DrawNode *m_hpBar;
 
-	float m_currentBehaviorInterval;
 
 	PathFinder m_pathFinder;
 
