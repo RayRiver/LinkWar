@@ -19,6 +19,8 @@
 USING_NS_CC;
 using namespace cocostudio;
 
+int g_id = 0;
+
 enum
 {
 	LAYER_BG = -5,
@@ -96,24 +98,35 @@ bool MapManager::init(const char *config)
 		for (const auto &touch : touches)
 		{
 			const Vec2 &point = touch->getLocation();
+
 			if (this->m_selfLauncherArea.containsPoint(point))
 			{
-				/*
 				// create entity
-				this->createEntity(false, point);
+				this->createEntity(++g_id, false, point);
 
 				// TODO: create opposite entity at random position
 				Vec2 p;
 				p.x = rand() % (int)(m_oppoLauncherArea.size.width) + (int)(m_oppoLauncherArea.origin.x);
 				p.y = rand() % (int)(m_oppoLauncherArea.size.height) + (int)(m_oppoLauncherArea.origin.y);
-				this->createEntity(true, p);
-				*/
+				this->createEntity(++g_id, true, p);
+			}
 
+			/*
+			if (UserData::getInstance()->getUid()==0 && this->m_selfLauncherArea.containsPoint(point))
+			{
 				LuaValueList args;	
 				args.pushFloat(point.x);
 				args.pushFloat(point.y);
 				GetNetImp()->writePacket(NET_CS_CREATE_ENTITY, args);
 			}
+			else if (UserData::getInstance()->getUid()==1 && this->m_oppoLauncherArea.containsPoint(point))
+			{
+				LuaValueList args;	
+				args.pushFloat(point.x);
+				args.pushFloat(point.y);
+				GetNetImp()->writePacket(NET_CS_CREATE_ENTITY, args);
+			}
+			*/
 		}
 	};
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
@@ -126,8 +139,9 @@ bool MapManager::init(const char *config)
 
 void MapManager::update( float dt )
 {
-	while (true)
+	//while (true)
 	{
+		/*
 		auto frame = LogicFrameManager::getInstance()->getFrame();
 		if (!frame)
 		{
@@ -143,14 +157,17 @@ void MapManager::update( float dt )
 
 		// debug logic frame index
 		DEBUGINFO_SETINT("logic frame index", LogicFrameManager::getInstance()->getCurrentFrameIndex());
+		*/
 
 
-		std::set<GameEntity *> cleanSelfEntities;
-		for (auto entity : m_selfEntities)
+		std::map<int, GameEntity *> cleanSelfEntities;
+		for (auto it : m_selfEntities)
 		{
+			auto id = it.first;
+			auto entity = it.second;
 			if (entity->shouldClean())
 			{
-				cleanSelfEntities.insert(entity);
+				cleanSelfEntities.insert(std::make_pair(id, entity));
 			}
 			else
 			{
@@ -161,12 +178,14 @@ void MapManager::update( float dt )
 				}
 			}
 		}
-		std::set<GameEntity *> cleanOppoEntities;
-		for (auto entity : m_oppoEntities)
+		std::map<int, GameEntity *> cleanOppoEntities;
+		for (auto it : m_oppoEntities)
 		{
+			auto id = it.first;
+			auto entity = it.second;
 			if (entity->shouldClean())
 			{
-				cleanOppoEntities.insert(entity);
+				cleanOppoEntities.insert(std::make_pair(id, entity));
 			}
 			else
 			{
@@ -179,22 +198,28 @@ void MapManager::update( float dt )
 		}
 
 		// clean children
-		for (auto entity : cleanSelfEntities)
+		for (auto it : cleanSelfEntities)
 		{
+			auto id = it.first;
+			auto entity = it.second;
+
 			auto pos = entity->getPosition();
 			auto current_grid = pos2grid(pos);
 			releaseGrid(current_grid.x, current_grid.y);
 
-			m_selfEntities.erase(entity);
+			m_selfEntities.erase(id);
 			this->removeChild(entity);
 		}
-		for (auto entity : cleanOppoEntities)
+		for (auto it : cleanOppoEntities)
 		{
+			auto id = it.first;
+			auto entity = it.second;
+
 			auto pos = entity->getPosition();
 			auto current_grid = pos2grid(pos);
 			releaseGrid(current_grid.x, current_grid.y);
 
-			m_oppoEntities.erase(entity);
+			m_oppoEntities.erase(id);
 			this->removeChild(entity);
 		}
 
@@ -290,24 +315,6 @@ void MapManager::createBattleFieldArea()
 
 void MapManager::createTerrain()
 {
-	/*
-	for (int y=0; y<m_h; ++y)
-	{
-		for (int x=0; x<m_w; ++x)
-		{
-			auto key = grid2key(x, y);
-			if (x==0 || x==m_w-1)
-			{
-				m_map[key] = GridType::Barrier;
-			}
-		}
-	}
-
-	m_map[grid2key(5,8)] = GridType::Barrier;
-	m_map[grid2key(6,8)] = GridType::Barrier;
-	m_map[grid2key(7,8)] = GridType::Barrier;
-	*/
-
 	auto draw = DrawNode::create();
 	this->addChild(draw, LAYER_TERRAIN);
 
@@ -328,9 +335,9 @@ void MapManager::createTerrain()
 	}
 }
 
-GameEntity * MapManager::createEntity( bool isEnemy, const cocos2d::Vec2 &pos )
+GameEntity * MapManager::createEntity( int id, bool isEnemy, const cocos2d::Vec2 &pos )
 {
-	auto entity = GameEntity::create("config/entity_soldier.json", this, isEnemy);
+	auto entity = GameEntity::create("config/entity_soldier.json", id, this, isEnemy);
 
 	entity->setPosition(pos);
 	entity->updateZOrder();
@@ -338,11 +345,11 @@ GameEntity * MapManager::createEntity( bool isEnemy, const cocos2d::Vec2 &pos )
 
 	if (isEnemy)
 	{
-		m_oppoEntities.insert(entity);
+		m_oppoEntities.insert(std::make_pair(id, entity));
 	}
 	else
 	{
-		m_selfEntities.insert(entity);
+		m_selfEntities.insert(std::make_pair(id, entity));
 	}
 
 	return entity;
@@ -480,18 +487,19 @@ void MapManager::moveEntity( GameEntity *entity )
 
 void MapManager::handleFrame( LogicFrameAction *action )
 {
-	if (action->uid == UserData::getInstance()->getUid())
+	if (!action->uid)
 	{
 		if (action->type == LogicFrameAction::Type::CreateEntity)
 		{
-			this->createEntity(false, Vec2(action->x, action->y));
+			Vec2 pos(action->x, action->y);
+			this->createEntity(action->id, false, pos);
 		}
 	}
 	else
 	{
 		if (action->type == LogicFrameAction::Type::CreateEntity)
 		{
-			this->createEntity(true, Vec2(display.width()-action->x, display.height()-action->y));
+			this->createEntity(action->id, true, Vec2(action->x, action->y));
 		}
 	}
 }

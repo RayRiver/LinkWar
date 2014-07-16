@@ -14,9 +14,12 @@ void NOD_Idle::onEnter( const BTInputParam &input )
 	auto self = inputData.self;
 
 	self->idle();
+	this->finish();
+	/*
 	self->runAction(Sequence::create(DelayTime::create(1.0f), CallFunc::create([=]() {
 		this->finish();
 	}), nullptr));
+	*/
 }
 
 void NOD_Idle::onExit( const BTInputParam &input, BTRunningStatus state )

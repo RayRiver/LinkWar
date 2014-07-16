@@ -32,8 +32,9 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 	GameEntity *foundEntity = nullptr;
 	if (self->isEnemy())
 	{
-		for (const auto &entity : map->getSelfEntities())
+		for (const auto &it : map->getSelfEntities())
 		{
+			const auto &entity = it.second;
 			if (!entity->shouldClean())
 			{
 				float d2 = (entity->getPosition() - pos).lengthSquared();
@@ -47,8 +48,9 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 	}
 	else
 	{
-		for (const auto &entity : map->getOppoEntities())
+		for (const auto &it : map->getOppoEntities())
 		{
+			const auto &entity = it.second;
 			if (!entity->shouldClean())
 			{
 				float d2 = (entity->getPosition() - pos).lengthSquared();

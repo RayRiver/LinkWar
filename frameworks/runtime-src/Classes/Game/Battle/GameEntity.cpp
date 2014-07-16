@@ -15,10 +15,10 @@ using namespace cocostudio;
 
 const int RECT_POINTS = 4;
 
-GameEntity * GameEntity::create( const char *filename, MapManager *map, bool isEnemy )
+GameEntity * GameEntity::create( const char *filename, int id, MapManager *map, bool isEnemy )
 {
 	auto ret = new GameEntity;
-	if (ret && ret->init(filename, map, isEnemy))
+	if (ret && ret->init(filename, id, map, isEnemy))
 	{
 		ret->autorelease();
 	}
@@ -30,7 +30,7 @@ GameEntity * GameEntity::create( const char *filename, MapManager *map, bool isE
 	return ret;
 }
 
-bool GameEntity::init( const char *filename, MapManager *map, bool isEnemy )
+bool GameEntity::init( const char *filename, int id, MapManager *map, bool isEnemy )
 {
 	if (!Node::init())
 	{
@@ -39,6 +39,7 @@ bool GameEntity::init( const char *filename, MapManager *map, bool isEnemy )
 
 	this->setAnchorPoint(Vec2(0.5f, 0.5f));
 
+	m_id = id;
 	m_hitBox = Rect::ZERO;
 	m_isEnemy = isEnemy;
 
@@ -62,6 +63,7 @@ bool GameEntity::init( const char *filename, MapManager *map, bool isEnemy )
 	m_pathFinder.init(map);
 
 	m_desireMove = false;
+	m_attackInterval = 0;
 
 	if (!this->loadFromFile(filename))
 	{
@@ -100,7 +102,18 @@ void GameEntity::onFrame( float dt )
 	}
 	else if (m_state == State::Attack)
 	{
+		--m_attackInterval;
 
+		if (m_attackInterval == 0)
+		{
+			auto target = getAttackTarget();
+			if (target)
+			{
+				target->hit(this);
+			}
+
+			m_attackInterval = 30;
+		}
 	}
 
 }
@@ -304,17 +317,17 @@ void GameEntity::attack()
 	this->stopAllActions();
 	this->setState(GameEntity::State::Attack);
 
+	m_attackInterval = 30;
+
+	/*
 	this->runAction(RepeatForever::create(Sequence::create(
 		DelayTime::create(0.5f),	
 		CallFunc::create([=](){
-			auto target = getAttackTarget();
-			if (target)
-			{
-				target->hit(this);
-			}
+
 		}),
 		DelayTime::create(0.5f),	
 		nullptr)));
+	*/
 }
 
 void GameEntity::hit( GameEntity * entity )
@@ -358,8 +371,9 @@ void GameEntity::die()
 
 	// 清理所有瞄准该对象的目标
 	std::vector<GameEntity *> v;
-	for (auto entity : m_lockSet)
+	for (auto it : m_lockSet)
 	{
+		auto entity = it.second;
 		v.push_back(entity);
 	}
 	for (auto entity : v)
@@ -418,13 +432,13 @@ void GameEntity::setAttackTarget( GameEntity *target )
 	{
 		if (m_attackTarget)
 		{
-			m_attackTarget->lockSet().erase(this);	
+			m_attackTarget->lockSet().erase(this->getId());	
 			m_attackTarget = nullptr;
 		}
 
 		if (target)
 		{
-			target->lockSet().insert(this);
+			target->lockSet().insert(std::make_pair(this->getId(), this));	
 			m_attackTarget = target; 
 		}
 	}

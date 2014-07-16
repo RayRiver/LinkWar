@@ -14,6 +14,7 @@ struct LogicFrameAction
 	int uid;
 	Type type;
 	float x, y;
+	int id;
 
 };
 

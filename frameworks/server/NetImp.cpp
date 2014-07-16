@@ -29,44 +29,6 @@ NetSocket * createNetSocket()
 	return new NetImp;
 }
 
-/*
-static int handleUserExtEvent(int handler, cocos2d::ScriptHandlerMgr::HandlerType handlerType, cocos2d::LuaValueArray &args)
-{
-	cocos2d::LuaStack *stack = cocos2d::LuaEngine::getInstance()->getLuaStack();
-	stack->pushInt((int)handlerType);
-	stack->pushLuaValueArray(args);
-	int ret = stack->executeFunctionByHandler(handler, 2);
-	stack->clean();
-	return ret;
-}
-
-static void sendCustomEvent(void *object, cocos2d::ScriptHandlerMgr::HandlerType handlerType, cocos2d::LuaValueArray &args)
-{
-#if CC_ENABLE_SCRIPT_BINDING
-	int nHandler = cocos2d::ScriptHandlerMgr::getInstance()->getObjectHandler((void*)object, handlerType);
-	if (0 != nHandler) 
-	{
-		handleUserExtEvent(nHandler, handlerType, args);
-	}
-#endif // #if CC_ENABLE_SCRIPT_BINDING
-}
-
-NetSocket *GetNetImp()
-{	
-	static NetImp obj;
-
-	size_t index = 0;
-	if (!NetManager::instance()->find(&obj, index)) 
-	{
-		NetManager::instance()->add(&obj);
-	}
-
-	BitStream::setDefaultByteOrder(BitStream::LITTLE_ENDIAN);
-
-	return (NetSocket *)&obj;
-}
-*/
-
 void NetImp::onConnected()
 {
 	if (NetManager::instance()->hasConnectCallback())
@@ -108,9 +70,6 @@ int NetImp::onReadLength(unsigned char *buffer, size_t bytes, size_t &offset)
 
 void NetImp::onRead(BitStream &packet_stream)
 {
-	//Log("do_read:");
-	//LogHex((char *)packet_stream.buffer(), packet_stream.size());
-
 	VarList args;
 
 	unsigned int id = packet_stream.readInt32();	
@@ -231,8 +190,4 @@ void NetImp::writePacket( unsigned int id, const VarList &args )
 
 	// write data
 	this->write(bs.buffer(), bs.size());
-
-	//Log("do_write:");
-	//LogHex((char *)bs_length.buffer(), bs_length.size());
-	//LogHex((char *)bs.buffer(), bs.size());
 }

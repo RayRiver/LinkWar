@@ -25,8 +25,8 @@ public:
 	};
 
 public:
-	static GameEntity *create(const char *filename, MapManager *map, bool isEnemy);
-	bool init(const char *filename, MapManager *map, bool isEnemy);
+	static GameEntity *create(const char *filename, int id, MapManager *map, bool isEnemy);
+	bool init(const char *filename, int id, MapManager *map, bool isEnemy);
 
 	bool loadFromFile(const char *filename);
 
@@ -63,7 +63,7 @@ public:
 	inline GameEntity *getAttackTarget() { return m_attackTarget; }
 
 	// 锁定该实体的实体集合
-	inline std::set<GameEntity *> &lockSet() { return m_lockSet; }
+	inline std::map<int, GameEntity *> &lockSet() { return m_lockSet; }
 
 	inline void setState(State state) { m_state = state; }
 	inline State getState() { return m_state; }
@@ -85,10 +85,14 @@ public:
 	inline void setDesiredPosition(const cocos2d::Vec2 &pos) { m_desiredPostition.x = pos.x; m_desiredPostition.y = pos.y; }
 	inline const cocos2d::Vec2 &getDesiredPosition() { return m_desiredPostition; }
 
+	inline int getId() { return m_id; }
+
 private:
 	typedef std::map<std::string, cocos2d::LuaValue> PROPERTY_MAP;
 	typedef std::pair<std::string, cocos2d::LuaValue> PROPERTY_MAP_PAIR;
 	PROPERTY_MAP m_propertyMap;
+
+	int m_id;
 
 	BlackBoard m_blackboard;
 
@@ -104,7 +108,7 @@ private:
 	cocos2d::Rect m_attackArea;
 
 	GameEntity *m_attackTarget;
-	std::set<GameEntity *> m_lockSet; // 锁定该实体的实体列表
+	std::map<int, GameEntity *> m_lockSet; // 锁定该实体的实体列表
 
 	bool m_hasBehavior;
 	float m_behaviorInterval;
@@ -119,6 +123,8 @@ private:
 
 	bool m_desireMove;
 	cocos2d::Vec2 m_desiredPostition;
+
+	int m_attackInterval;
 };
 
 #endif // GameEntity_h__

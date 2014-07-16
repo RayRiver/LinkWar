@@ -27,6 +27,7 @@ static int gettimeofday(struct timeval * val, struct timezone *)
 Server::Server()
 	: m_lastUpdate(nullptr)
 	, m_bStartSyncLogicFrame(false)
+	, m_nEntityId(0)
 {
 
 }
@@ -147,10 +148,20 @@ void Server::update(float dt)
 		args.add((int)vActions.size());
 		for (const auto &action : vActions)
 		{
-			args.add((int)action.uid);
+			int pos = -1;
+			for (int i=0; i<(int)m_readyUsers.size(); ++i)
+			{
+				if (action.uid == m_readyUsers[i]->getUid())
+				{
+					pos = i;
+					break;
+				}
+			}
+			args.add((int)pos);
 			args.add((int)action.type);
 			args.add((float)action.x);
 			args.add((float)action.y);
+			args.add((int)action.id);
 		}
 
 		for (auto ready_user : m_readyUsers)
@@ -213,19 +224,11 @@ void Server::onReceive( NetSocket *conn, unsigned int id, const VarList &args )
 				m_readyUsers.push_back(user);
 				if (m_readyUsers.size() == 2)
 				{
-					std::vector<int> vUids;
-					for (auto ready_user : m_readyUsers)
+					for (int i=0; i<(int)m_readyUsers.size(); ++i)
 					{
-						vUids.push_back(ready_user->getUid());
-					}
-					for (auto ready_user : m_readyUsers)
-					{
+						auto ready_user = m_readyUsers[i];
 						VarList send_args;
-						for (auto uid : vUids)
-						{
-							send_args.add(uid);
-						}
-						send_args.add(ready_user->getUid());
+						send_args.add(i);
 						ready_user->getConnection()->writePacket(NET_SC_START, send_args);	
 						Log("send start msg to uid=%d", ready_user->getUid()); 
 					}
@@ -247,6 +250,7 @@ void Server::onReceive( NetSocket *conn, unsigned int id, const VarList &args )
 			action.type = LogicFrameAction::Type::CreateEntity;
 			action.x = x;
 			action.y = y;
+			action.id = ++m_nEntityId;
 
 			user->addAction(action);
 		}

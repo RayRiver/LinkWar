@@ -73,17 +73,28 @@ bool PathFinder::findPath()
 	int key = m_map->grid2key(startNode->point);
 
 	m_openList.push_back(startNode);
-	make_heap(m_openList.begin(), m_openList.end(), MinBinaryHeapCompare<Node *>());
+	//make_heap(m_openList.begin(), m_openList.end(), MinBinaryHeapCompare<Node *>());
 	m_openNodes.insert(pair<int,Node*>(key, startNode));
 
 	while (!m_openList.empty())
 	{
 		// 在开放列表中寻找F值最小的节点
-		pop_heap(m_openList.begin(), m_openList.end(), MinBinaryHeapCompare<Node *>());
-		auto node = m_openList.back();
+		//pop_heap(m_openList.begin(), m_openList.end(), MinBinaryHeapCompare<Node *>());
+		//auto node = m_openList.back();
+		size_t min_i = 0;
+		auto node = m_openList[min_i];
+		for (size_t i=1; i<m_openList.size(); ++i)
+		{
+			if (node->F > m_openList[i]->F)
+			{
+				node = m_openList[i];	
+				min_i = i;
+			}
+		}
 
 		// 将该节点从开放列表中移除，加入封闭列表
-		m_openList.pop_back();
+		m_openList.erase(m_openList.begin()+min_i);
+		//m_openList.pop_back();
 		m_openNodes.erase(key);
 		m_closeNodes.insert(key);
 
@@ -103,10 +114,14 @@ bool PathFinder::findPath()
 		// 1  2  3
 		// 4     6
 		// 7  8  9
-		_checkChild(node->point.x+1, node->point.y, node);		// 6
-		_checkChild(node->point.x, node->point.y-1,	node);		// 2
-		_checkChild(node->point.x, node->point.y+1, node);		// 8
-		_checkChild(node->point.x-1, node->point.y-1, node);	// 4
+		{
+			_checkChild(node->point.x+1, node->point.y, node);		// 6
+			_checkChild(node->point.x, node->point.y-1,	node);		// 2
+			_checkChild(node->point.x, node->point.y+1, node);		// 8
+			_checkChild(node->point.x-1, node->point.y-1, node);	// 4
+		}
+
+
 
 		//_checkChild(node->point.x+1, node->point.y-1, node);	// 3
 		//_checkChild(node->point.x+1, node->point.y+1, node);	// 9
@@ -150,7 +165,7 @@ bool PathFinder::_checkChild( int x, int y, Node *parent )
 			node->F -= (node->G-G);
 			node->G = G;
 			node->parent = parent;
-			make_heap(m_openList.begin(), m_openList.end(), MinBinaryHeapCompare<Node *>());
+			//make_heap(m_openList.begin(), m_openList.end(), MinBinaryHeapCompare<Node *>());
 		}
 	}
 	else 
@@ -165,7 +180,7 @@ bool PathFinder::_checkChild( int x, int y, Node *parent )
 		node->F = node->G + node->H;
 		node->parent = parent;
 		m_openList.push_back(node);
-		push_heap(m_openList.begin(), m_openList.end(), MinBinaryHeapCompare<Node *>());
+		//push_heap(m_openList.begin(), m_openList.end(), MinBinaryHeapCompare<Node *>());
 		m_openNodes.insert(pair<int,Node*>(key, node));
 	}
 

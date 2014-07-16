@@ -1,7 +1,7 @@
 #ifndef MapManager_h__
 #define MapManager_h__
 
-#include <set>
+#include <map>
 
 #include "cocos2d.h"
 
@@ -47,7 +47,7 @@ public:
 	void createBattleFieldArea();
 	void createTerrain();
 
-	GameEntity *createEntity(bool isEnemy, const cocos2d::Vec2 &pos);
+	GameEntity *createEntity(int id, bool isEnemy, const cocos2d::Vec2 &pos);
 
 	void moveEntity(GameEntity *entity);
 
@@ -62,8 +62,8 @@ public:
 	inline int getGridRef(int x, int y) { return m_map[y*m_w+x]; }
 
 	inline const cocos2d::Rect &getBattleFieldArea() { return m_battleFieldArea; }
-	inline std::set<GameEntity *> &getSelfEntities() { return m_selfEntities; }
-	inline std::set<GameEntity *> &getOppoEntities() { return m_oppoEntities; }
+	inline std::map<int, GameEntity *> &getSelfEntities() { return m_selfEntities; }
+	inline std::map<int, GameEntity *> &getOppoEntities() { return m_oppoEntities; }
 
 public:
 	inline Grid pos2grid(const cocos2d::Vec2 &pos) {
@@ -93,8 +93,8 @@ private:
 	cocos2d::Rect m_oppoLauncherArea;
 	cocos2d::Rect m_battleFieldArea;
 
-	std::set<GameEntity *> m_selfEntities;
-	std::set<GameEntity *> m_oppoEntities;
+	std::map<int, GameEntity *> m_selfEntities;
+	std::map<int, GameEntity *> m_oppoEntities;
 };
 
 #endif // MapManager_h__

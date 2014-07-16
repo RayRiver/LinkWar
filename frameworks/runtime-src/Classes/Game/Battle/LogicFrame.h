@@ -11,11 +11,12 @@ struct LogicFrameAction
 		CreateEntity = 1,
 	};
 
-	LogicFrameAction(int _uid, LogicFrameAction::Type _type, float _x, float _y) : uid(_uid), type(_type), x(_x), y(_y) {}
+	LogicFrameAction(int _uid, LogicFrameAction::Type _type, float _x, float _y, int _id) : uid(_uid), type(_type), x(_x), y(_y), id(_id) {}
 
 	int uid;
 	Type type;
 	float x, y;
+	int id;
 };
 
 struct LogicFrame

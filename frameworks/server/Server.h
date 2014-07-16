@@ -31,6 +31,7 @@ private:
 
 	std::vector<UserData *> m_readyUsers;
 	bool m_bStartSyncLogicFrame;
+	int m_nEntityId;
 
 // internal bellow -----------------------------------------------
 private:

@@ -212,8 +212,10 @@ void NetImp::onRead(BitStream &packet_stream)
 				float x = (*it).floatValue();
 				++it;
 				float y = (*it).floatValue();
+				++it;
+				int id = (*it).intValue();
 
-				LogicFrameAction *action = new LogicFrameAction(uid, type, x, y);
+				LogicFrameAction *action = new LogicFrameAction(uid, type, x, y, id);
 				frame->actions.push_back(action);
 			}
 
@@ -223,8 +225,6 @@ void NetImp::onRead(BitStream &packet_stream)
 	case NET_SC_START:
 		{
 			auto it = args.begin();
-			++it;
-			++it;
 			++it;
 			++it;
 			int uid = (*it).intValue();
