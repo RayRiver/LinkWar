@@ -66,7 +66,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Classes;$(EngineRoot)cocos\scripting\lua-bindings\auto;$(EngineRoot)cocos\scripting\lua-bindings\manual;$(EngineRoot)cocos\audio\include;$(EngineRoot)external;$(EngineRoot)external\lua\lua;$(EngineRoot)external\lua\tolua;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;$(EngineRoot);$(ProjectDir)..\Classes\Game;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Classes;$(EngineRoot)cocos\scripting\lua-bindings\auto;$(EngineRoot)cocos\scripting\lua-bindings\manual;$(EngineRoot)cocos\audio\include;$(EngineRoot)external;$(EngineRoot)external\lua\lua;$(EngineRoot)external\lua\tolua;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;$(EngineRoot);$(ProjectDir)..\Classes\Game;$(EngineRoot)cocos\editor-support;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -201,6 +201,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Game\Base\Sys.h" />
     <ClInclude Include="..\Classes\Game\Base\ThreadManager.h" />
     <ClInclude Include="..\Classes\Game\Base\ThreadObj.h" />
+    <ClInclude Include="..\Classes\Game\Battle\ObjectComponent.h" />
     <ClInclude Include="..\Classes\Game\Battle\GameLogic.h" />
     <ClInclude Include="..\Classes\Game\Battle\GameObject.h" />
     <ClInclude Include="..\Classes\Game\Battle\GameObjectManager.h" />
@@ -261,6 +262,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\Game\Base\Sys.cpp" />
     <ClCompile Include="..\Classes\Game\Base\ThreadManager.cpp" />
     <ClCompile Include="..\Classes\Game\Base\ThreadObj.cpp" />
+    <ClCompile Include="..\Classes\Game\Battle\ObjectComponent.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\GameLogic.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\GameObject.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\GameObjectManager.cpp" />

@@ -112,7 +112,7 @@ void BTDebugRenderer::initNodes( NodeList &nodes, float origin_x )
 	max_width += 2*interval_x;
 	max_height += (nodes.size()+1)*interval_y;
 
-	float origin_y = display.cy() + max_height/2;
+	float origin_y = DisplayHelper::getInstance()->cy() + max_height/2;
 	for (auto &node : nodes)	
 	{
 		const auto &debugNode = m_nodeMap[node].debugNode;

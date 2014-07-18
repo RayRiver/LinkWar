@@ -1,22 +1,30 @@
 {
 	"maxhp": 5.0,
 	"atk": 1.0,
-
 	"move_speed": 1.0,
+
 	"hitbox": {
 		"x": -10,
 		"y": -10,
 		"w": 20,
 		"h": 20
 	},
+	"show_hitbox": false,
+
 	"attack_area": {
 		"x": -20,
 		"y": -20,
 		"w": 40,
 		"h": 40
 	},
+
 	"behavior": "config/bt_soldier.json",
-	"behavior_interval_frames": 5,
+	"behavior_interval_frames": 5, 
+
+	"animation_file": "animation/ani_green_link.ExportJson",
+	"animation_name" : "ani_green_link",
+	"animation_default_action": "idle_down",
+	"animation_scale": 1.5,
 
 	"": ""
 }

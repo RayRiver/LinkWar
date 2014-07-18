@@ -40,6 +40,8 @@ void GameLogic::handleTouch( const MapPoint & point )
 		// 创建对象;
 		auto self = OBJECTS->createObject(++m_objectIdIndex, 1, (int)GameObjectGroup::Group0);
 		self->setPosition(point);
+		self->setDirection(GameObjectDirection::Up);
+		self->idle();
 
 		// 临时创建对方对象，在随机位置;
 		MapPoint p;
@@ -47,6 +49,9 @@ void GameLogic::handleTouch( const MapPoint & point )
 		p.y = rand() % (int)(oppoArea.h) + (int)(oppoArea.y);
 		auto oppo = OBJECTS->createObject(++m_objectIdIndex, 1, (int)GameObjectGroup::Group1);
 		oppo->setPosition(p);
+		oppo->setDirection(GameObjectDirection::Down);
+		GAME_OBJECT_VIEW(oppo->id())->setColorMask(cocos2d::Color3B(255, 0, 0));
+		oppo->idle();
 	}
 }
 
@@ -55,30 +60,44 @@ void GameLogic::handleLogicFrame( LogicFrame *frame )
 	auto mapManager = MapManager::getInstance();
 	auto objectManager = GameObjectManager::getInstance();
 
-	// 逻辑帧处理;
-	objectManager->callObjects([=](GameObject *object, GameObjectView *view) -> bool {
-		auto id = object->id();
-		if (object->shouldClean())
-		{
-			// 加入待清理对象列表;
-			m_shouldCleanObjects.insert(std::make_pair(id, object));
-		}
-		else
-		{
-			// 对象逻辑处理;
-			object->onLogic();
+	std::map<int, GameObject *> shouldCleanObjects;
+	std::map<int, GameObjectView *> shouldCleanObjectViews;
 
-			// 对象移动;
-			if (object->desireMove())
+	// 逻辑帧处理;
+	objectManager->callObjects([&](int id, GameObject *object, GameObjectView *view) -> bool {
+		if (object)
+		{
+			if (object->shouldClean())
 			{
-				this->moveObject(object);
+				// 加入待清理对象列表;
+				shouldCleanObjects.insert(std::make_pair(id, object));
+			}
+			else
+			{
+				// 对象逻辑处理;
+				object->onLogic();
+
+				// 对象移动;
+				if (object->desireMove())
+				{
+					this->moveObject(object);
+				}
 			}
 		}
+
+		if (view)
+		{
+			if (view->shouldClean())
+			{
+				shouldCleanObjectViews.insert(std::make_pair(id, view));
+			}
+		}
+
 		return true;
 	});
 
 	// 清理对象;
-	for (auto it : m_shouldCleanObjects)
+	for (auto it : shouldCleanObjects)
 	{
 		auto id = it.first;
 		auto object = it.second;
@@ -88,16 +107,27 @@ void GameLogic::handleLogicFrame( LogicFrame *frame )
 		auto current_grid = mapManager->pos2grid(pos);
 		mapManager->releaseGrid(current_grid.x, current_grid.y);
 
-		// 移除对象，移除对象视图;
+		// 移除对象;
 		objectManager->destroyObject(id);
 	}
-	m_shouldCleanObjects.clear();	
+	shouldCleanObjects.clear();	
+
+	// 清理视图;
+	for (auto it : shouldCleanObjectViews)
+	{
+		auto id = it.first;
+
+		// 移除对象视图;
+		objectManager->destroyObjectView(id);
+	}
+	shouldCleanObjectViews.clear();
 }
 
 void GameLogic::moveObject( GameObject *object )
 {
 	auto mapManager = MapManager::getInstance();
 	auto objectManager = GameObjectManager::getInstance();
+	auto view = GAME_OBJECT_VIEW(object->id());
 
 	auto pos = object->getPosition();
 	auto target = object->getDesiredPosition();
@@ -188,6 +218,40 @@ void GameLogic::moveObject( GameObject *object )
 			pt.x *= moveSpeed;
 			pt.y *= moveSpeed;
 		}
+		
+		// 设置朝向;
+		auto direction = object->getDirection();
+		if (pt.x.abs() > pt.y.abs())
+		{
+			if (pt.x > Fixed::ZERO)
+			{
+				object->setDirection(GameObjectDirection::Right);
+			}
+			else
+			{
+				object->setDirection(GameObjectDirection::Left);
+			}
+		}
+		else
+		{
+			if (pt.y > Fixed::ZERO)
+			{
+				object->setDirection(GameObjectDirection::Up);
+			}
+			else
+			{
+				object->setDirection(GameObjectDirection::Down);
+			}
+		}
+
+		// 朝向改变;
+		if (direction != object->getDirection())
+		{
+			// 播放动画;
+			view->onMove();
+		}
+
+		// 更新位置;
 		pt.x += pos.x;
 		pt.y += pos.y;
 		object->setPosition(pt);

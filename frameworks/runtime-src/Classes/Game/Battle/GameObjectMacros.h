@@ -1,5 +1,5 @@
-#ifndef GameObjectState_h__
-#define GameObjectState_h__
+#ifndef GameObjectMacros_h__
+#define GameObjectMacros_h__
 
 enum class GameObjectState
 {
@@ -16,4 +16,12 @@ enum class GameObjectGroup
 	Group1,
 };
 
-#endif // GameObjectState_h__
+enum class GameObjectDirection
+{
+	Left,
+	Right,
+	Up,
+	Down,
+};
+
+#endif // GameObjectMacros_h__

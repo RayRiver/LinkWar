@@ -31,8 +31,8 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 
 	// 寻找最近的攻击目标;
 	GameObject *foundObject = nullptr;
-	OBJECTS->callObjects([&](GameObject *object, GameObjectView *view) -> bool {
-		if (!object->shouldClean() && object->group() != self->group()) // 对象不销毁，非同组;
+	OBJECTS->callObjects([&](int id, GameObject *object, GameObjectView *view) -> bool {
+		if (object && !object->shouldClean() && object->group() != self->group()) // 对象不销毁，非同组;
 		{
 			auto &d2 = (object->getPosition() - pos).lengthSquared();
 			if (!foundObject || d2 < distance2)

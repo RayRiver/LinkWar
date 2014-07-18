@@ -13,7 +13,7 @@ class GameObjectView;
 class GameObjectManager : cocos2d::Node
 {
 public:
-	typedef std::function<bool(GameObject *, GameObjectView *)> ObjectCallback;
+	typedef std::function<bool(int, GameObject *, GameObjectView *)> ObjectCallback;
 
 public:
 	static GameObjectManager *getInstance();
@@ -25,6 +25,7 @@ public:
 
 	// 销毁对象;
 	void destroyObject(int id);
+	void destroyObjectView(int id);
 
 	// 获取对象;
 	GameObject *getObject(int id);

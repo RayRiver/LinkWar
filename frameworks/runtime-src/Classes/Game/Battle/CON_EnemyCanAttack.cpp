@@ -17,8 +17,8 @@ bool CON_EnemyCanAttack::onEvaluate(const BTInputParam& input) const
 
 	// 寻找可攻击目标;
 	GameObject *foundObject = nullptr;
-	OBJECTS->callObjects([&](GameObject *object, GameObjectView *view) -> bool {
-		if (!object->shouldClean() && object->group() != self->group()) // 对象不销毁，非同组;
+	OBJECTS->callObjects([&](int id, GameObject *object, GameObjectView *view) -> bool {
+		if (object && !object->shouldClean() && object->group() != self->group()) // 对象不销毁，非同组;
 		{
 			if (area.containsPoint(object->getPosition()))
 			{

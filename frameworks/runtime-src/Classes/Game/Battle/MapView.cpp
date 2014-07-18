@@ -79,14 +79,19 @@ void MapView::createGrid()
 	auto grid = DrawNode::create();
 	this->addChild(grid, MapManager::LAYER_GRID);
 
+	auto top = DisplayHelper::getInstance()->top();
+	auto bottom = DisplayHelper::getInstance()->bottom();
+	auto left = DisplayHelper::getInstance()->left();
+	auto right = DisplayHelper::getInstance()->right();
+
 	Fixed i;
 	for (i=0; i<m_mapW; ++i)
 	{
-		grid->drawSegment(Vec2(i*m_gridW, display.top()), Vec2(i*m_gridW, display.bottom()), 0.5f, Color4F(0.5f, 0.5f, 0.5f, 0.5f));
+		grid->drawSegment(Vec2(i*m_gridW, top), Vec2(i*m_gridW, bottom), 0.5f, Color4F(0.5f, 0.5f, 0.5f, 0.5f));
 	}
 	for (i=0; i<m_mapH; ++i)
 	{
-		grid->drawSegment(Vec2(display.left(), i*m_gridH), Vec2(display.right(), i*m_gridH), 0.5f, Color4F(0.5f, 0.5f, 0.5f, 0.5f));
+		grid->drawSegment(Vec2(left, i*m_gridH), Vec2(right, i*m_gridH), 0.5f, Color4F(0.5f, 0.5f, 0.5f, 0.5f));
 	}
 }
 
@@ -96,8 +101,8 @@ void MapView::createLauncherArea()
 	const auto &oppoLauncherArea = MAP->getOppoLauncherArea().toRect();
 
 	Vec2 selfVerts[RECT_POINTS], oppoVerts[RECT_POINTS];
-	display.rect2points(selfLauncherArea, selfVerts);
-	display.rect2points(oppoLauncherArea, oppoVerts);
+	DisplayHelper::getInstance()->rect2points(selfLauncherArea, selfVerts);
+	DisplayHelper::getInstance()->rect2points(oppoLauncherArea, oppoVerts);
 
 	auto draw = DrawNode::create();
 	this->addChild(draw, MapManager::LAYER_LAUNCHER_AREA);
@@ -114,7 +119,7 @@ void MapView::createBattleFieldArea()
 	this->addChild(draw, MapManager::LAYER_BATTLE_FIELD_AREA);
 
 	Vec2 verts[RECT_POINTS];
-	display.rect2points(battleFieldArea, verts);
+	DisplayHelper::getInstance()->rect2points(battleFieldArea, verts);
 	draw->drawPolygon(verts, RECT_POINTS, Color4F(1.0f, 1.0f, 1.0f, 0.2f), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 0.4f));
 }
 

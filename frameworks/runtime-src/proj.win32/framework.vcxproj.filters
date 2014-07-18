@@ -226,6 +226,9 @@
     <ClInclude Include="..\Classes\Game\Battle\UserData.h">
       <Filter>Game\Battle\Logic</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\ObjectComponent.h">
+      <Filter>Game\Battle\Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
@@ -389,6 +392,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\UserData.cpp">
       <Filter>Game\Battle\Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\ObjectComponent.cpp">
+      <Filter>Game\Battle\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

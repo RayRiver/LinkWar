@@ -48,7 +48,7 @@ void DebugInfo::init( cocos2d::Node * node )
 	// create title
 	auto label = Label::createWithSystemFont("DebugInfo", "Arial", 18);
 	label->setAnchorPoint(Vec2(0,1));
-	label->setPosition(Vec2(0, display.height()-m_currentHeight));
+	label->setPosition(Vec2(0, DisplayHelper::getInstance()->height()-m_currentHeight));
 	m_layer->addChild(label);
 	m_currentHeight += label->getContentSize().height;
 }
@@ -223,7 +223,7 @@ void DebugInfo::createLabel( DebugInfo::Info *info )
 	info->label = Label::createWithSystemFont(info->name + ": " + info->stringVal, "Arial", 18);
 
 	info->label->setAnchorPoint(Vec2(0,1));
-	info->label->setPosition(Vec2(0, display.height()-m_currentHeight));
+	info->label->setPosition(Vec2(0, DisplayHelper::getInstance()->height()-m_currentHeight));
 	m_layer->addChild(info->label);
 
 	m_currentHeight += info->label->getContentSize().height;

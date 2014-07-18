@@ -101,19 +101,51 @@ void GameObjectManager::destroyObject( int id )
 	auto it = m_objectMap.find(id);
 	if (it != m_objectMap.end())
 	{
-		auto object = it->second.object;
-		auto view = it->second.view;
-		m_objectMap.erase(it);
+		auto &data = it->second;
 
 		// 销毁对象;
-		delete object;
+		if (data.object)
+		{
+			delete data.object;
+			data.object = nullptr;
+		}
 
-		// 销毁对象视图;
-		this->removeChild(view);
+		// 删除记录;
+		if (!data.object && !data.view)
+		{
+			m_objectMap.erase(it);
+		}
 	}
 	else
 	{
 		log("destroyObject: id=%d, object not exist", id);
+	}
+}
+
+void GameObjectManager::destroyObjectView( int id )
+{
+	// 检查该对象是否存在;
+	auto it = m_objectMap.find(id);
+	if (it != m_objectMap.end())
+	{
+		auto &data = it->second;
+
+		// 销毁对象视图;
+		if (data.view)
+		{
+			this->removeChild(data.view);
+			data.view = nullptr;
+		}
+
+		// 删除记录;
+		if (!data.object && !data.view)
+		{
+			m_objectMap.erase(it);
+		}
+	}
+	else
+	{
+		log("destroyObjectView: id=%d, object view not exist", id);
 	}
 }
 
@@ -149,7 +181,7 @@ void GameObjectManager::callObjects( const ObjectCallback &callback )
 	{
 		auto id = it.first;
 		const auto &data = it.second;
-		bool ret = callback(data.object, data.view);
+		bool ret = callback(id, data.object, data.view);
 		if (!ret)
 		{
 			break;
@@ -165,7 +197,7 @@ void GameObjectManager::callObjectsInGroup( GameObjectGroup group, const ObjectC
 		const auto &data = it.second;
 		if (data.object->group() == (int)group)
 		{
-			bool ret = callback(data.object, data.view);
+			bool ret = callback(id, data.object, data.view);
 			if (!ret)
 			{
 				break;

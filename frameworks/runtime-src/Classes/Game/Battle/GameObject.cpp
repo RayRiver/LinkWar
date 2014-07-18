@@ -10,6 +10,7 @@
 #include "GameObjectView.h"
 #include "GameObjectManager.h"
 #include "PathFinder.h"
+#include "ObjectComponent.h"
 
 USING_NS_CC;
 using namespace cocostudio;
@@ -18,9 +19,10 @@ GameObject::GameObject()
 	: m_shouldClean(false)
 	, m_id(-1)
 	, m_group(-1)
-	, m_isEnemy(false)
 	, m_state(GameObjectState::Idle)
 	, m_desireMove(false)
+	, m_direction(GameObjectDirection::Down)
+	, m_showHitBox(false)
 	, m_behavior(nullptr)
 	, m_behaviorIntervalFrames(1)
 	, m_currentBehaviorIntervalFrames(0)
@@ -38,6 +40,8 @@ GameObject::~GameObject()
 		delete m_behavior;
 		m_behavior = nullptr;
 	}
+
+	removeAllComponents();
 }
 
 bool GameObject::init( const char * config, int id, int group )
@@ -101,6 +105,9 @@ bool GameObject::initData( const char *config )
 		m_hitBox.h = DICTOOL->getFloatValue_json(hitbox, "h", 0.0f);
 	}
 
+	// 解析是否显示受击盒;
+	m_showHitBox = DICTOOL->getBooleanValue_json(dict, "show_hitbox", false);
+
 	// 解析对象攻击区域;
 	auto attackAreaExist = DICTOOL->checkObjectExist_json(dict, "attack_area");
 	if (attackAreaExist)
@@ -112,7 +119,80 @@ bool GameObject::initData( const char *config )
 		m_attackArea.h = DICTOOL->getFloatValue_json(attackArea, "h", 0.0f);
 	}
 
+	// 解析对象动画;
+	const char *animation_file = DICTOOL->getStringValue_json(dict, "animation_file", nullptr);
+	const char *animation_name = DICTOOL->getStringValue_json(dict, "animation_name", nullptr);
+	if (animation_file && animation_name)
+	{
+		m_animationFile = animation_file;
+		m_animationName = animation_name;
+
+		const char *animation_default_action = DICTOOL->getStringValue_json(dict, "animation_default_action", nullptr);
+		if (animation_default_action)
+		{
+			m_animationDefaultAction = animation_default_action;
+		}
+
+		const auto &animation_scale = Fixed(DICTOOL->getFloatValue_json(dict, "animation_scale", 1.0f));
+		m_animationScale = animation_scale;
+	}
+
 	return true;
+}
+
+void GameObject::addComponent( const char *name, ObjectComponent *com )
+{
+	auto it = m_componentMap.find(name);
+	if (it == m_componentMap.end())
+	{
+		m_componentMap.insert(ComponentMapPair(name, com));
+	}
+	else
+	{
+		log("game object add component [%s]: already exist", name);
+	}
+}
+
+void GameObject::removeComponent( const char *name )
+{
+	auto it = m_componentMap.find(name);
+	if (it == m_componentMap.end())
+	{
+		log("game object remove component [%s]: no such component", name);
+	}
+	else
+	{
+		auto com = it->second;
+		delete com;
+
+		m_componentMap.erase(it);
+	}
+}
+
+void GameObject::removeAllComponents()
+{
+	for (auto it : m_componentMap)
+	{
+		auto com = it.second;
+		if (com)
+		{
+			delete com;
+		}
+	}
+	m_componentMap.clear();
+}
+
+ObjectComponent * GameObject::getComponent( const char *name )
+{
+	auto it = m_componentMap.find(name);
+	if (it != m_componentMap.end())
+	{
+		return it->second;
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 void GameObject::removeProperty( const char *name )
@@ -120,7 +200,7 @@ void GameObject::removeProperty( const char *name )
 	auto it = m_propertyMap.find(name);
 	if (it == m_propertyMap.end())
 	{
-		log("game entity remove property [%s]: no such property", name);
+		log("game object remove property [%s]: no such property", name);
 	}
 	else
 	{
@@ -232,6 +312,7 @@ void GameObject::onLogic()
 			auto target = this->getAttackTarget();
 			if (target)
 			{
+				GAME_OBJECT_VIEW(m_id)->onAttack();
 				target->hit(this);
 			}
 			m_currentAttackInterval = m_attackInterval;
@@ -245,7 +326,9 @@ void GameObject::idle()
 	this->setState(GameObjectState::Idle);
 
 	// 更新视图;
-	GAME_OBJECT_VIEW(m_id)->stopAllActions();
+	auto view = GAME_OBJECT_VIEW(m_id);
+	view->stopAllActions();
+	view->onIdle();
 }
 
 void GameObject::move( const MapPoint &pos )
@@ -255,7 +338,9 @@ void GameObject::move( const MapPoint &pos )
 	this->setState(GameObjectState::Move);
 
 	// 更新视图;
-	GAME_OBJECT_VIEW(m_id)->stopAllActions();
+	auto view = GAME_OBJECT_VIEW(m_id);
+	view->stopAllActions();
+	view->onMove();
 }
 
 void GameObject::moveToAttack()
@@ -264,7 +349,9 @@ void GameObject::moveToAttack()
 	this->setState(GameObjectState::MoveToAttack);
 
 	// 更新视图;
-	GAME_OBJECT_VIEW(m_id)->stopAllActions();
+	auto view = GAME_OBJECT_VIEW(m_id);
+	view->stopAllActions();
+	view->onMove();
 }
 
 void GameObject::attack()
@@ -275,7 +362,8 @@ void GameObject::attack()
 	m_currentAttackInterval = m_attackInterval;
 
 	// 更新视图;
-	GAME_OBJECT_VIEW(m_id)->stopAllActions();
+	auto view = GAME_OBJECT_VIEW(m_id);
+	view->stopAllActions();
 }
 
 void GameObject::hit( GameObject *object )
@@ -294,7 +382,9 @@ void GameObject::hit( GameObject *object )
 	}
 
 	// 更新HP视图;
-	GAME_OBJECT_VIEW(m_id)->updateHPBar();
+	auto view = GAME_OBJECT_VIEW(m_id);
+	view->updateHPBar();
+	view->onHit();
 }
 
 void GameObject::die()
@@ -302,7 +392,7 @@ void GameObject::die()
 	m_pathFinder.clearPath();
 	this->setState(GameObjectState::Die);
 
-	log("entity die %s", this->isEnemy() ? "enemy" : "self");
+	log("entity die, group %d", this->group());
 
 	// 清楚攻击目标;
 	this->setAttackTarget(nullptr);
@@ -319,11 +409,14 @@ void GameObject::die()
 		object->setAttackTarget(nullptr);
 	}
 
+	// 更新视图;
+	auto view = GAME_OBJECT_VIEW(m_id);
+	view->stopAllActions();
+	view->onDie();
+
 	// 设置清理标志;
 	m_shouldClean = true;
 
-	// 更新视图;
-	GAME_OBJECT_VIEW(m_id)->stopAllActions();
 }
 
 void GameObject::setPosition( const MapPoint &point )

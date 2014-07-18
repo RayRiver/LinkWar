@@ -2,18 +2,18 @@
 
 USING_NS_CC;
 
-Display *Display::s_instance = nullptr;
+DisplayHelper *DisplayHelper::s_instance = nullptr;
 
-Display * Display::getInstance()
+DisplayHelper * DisplayHelper::getInstance()
 {
 	if (!s_instance)
 	{
-		s_instance = new Display;
+		s_instance = new DisplayHelper;
 	}
 	return s_instance;
 }
 
-Display::Display()
+DisplayHelper::DisplayHelper()
 {
 	m_rect = Director::getInstance()->getOpenGLView()->getVisibleRect();
 	m_size = m_rect.size;
@@ -43,7 +43,7 @@ Display::Display()
 	m_pointBottomCenter = Vec2(m_cx, m_bottom);
 }
 
-Display::~Display()
+DisplayHelper::~DisplayHelper()
 {
 
 }

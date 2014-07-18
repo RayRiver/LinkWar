@@ -23,7 +23,7 @@ private:
 
 	int m_objectIdIndex;
 
-	std::map<int, GameObject *> m_shouldCleanObjects;
+	
 };
 
 #endif // GameLogic_h__

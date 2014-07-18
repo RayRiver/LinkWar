@@ -1,13 +1,13 @@
-#ifndef Display_h__
-#define Display_h__
+#ifndef DisplayHelper_h__
+#define DisplayHelper_h__
 
 #include "cocos2d.h"
 
-class Display
+class DisplayHelper
 {
 public:
-	static Display *getInstance();
-	~Display();
+	static DisplayHelper *getInstance();
+	~DisplayHelper();
 
 	// visible rect
 	inline const cocos2d::Size &size() { return m_size; }
@@ -89,11 +89,11 @@ private:
 	cocos2d::Vec2 m_pointTopCenter, m_pointBottomCenter, m_pointLeftCenter, m_pointRightCenter;
 
 private:
-	Display();
-	static Display *s_instance;
+	DisplayHelper();
+	static DisplayHelper *s_instance;
 
 };
 
-#define display (*Display::getInstance())
+#define DISPLAY (DisplayHelper::getInstance())
 
-#endif // Display_h__
+#endif // DisplayHelper_h__

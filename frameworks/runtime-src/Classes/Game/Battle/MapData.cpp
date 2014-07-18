@@ -27,8 +27,8 @@ MapData::~MapData()
 
 bool MapData::init( const char *config )
 {
-	m_displayW = display.width();
-	m_displayH = display.height();
+	m_displayW = DisplayHelper::getInstance()->width();
+	m_displayH = DisplayHelper::getInstance()->height();
 
 	std::string fullPath = FileUtils::getInstance()->fullPathForFilename(config);
 	std::string fileContent = FileUtils::getInstance()->getStringFromFile(fullPath);

@@ -9,6 +9,7 @@
 #include "PathFinder.h"
 
 class BTNode;
+class ObjectComponent;
 
 class GameObject
 {
@@ -30,6 +31,40 @@ public:
 	void hit(GameObject *entity);
 	void die();
 
+	// 对象组件操作方法;
+	void addComponent(const char *name, ObjectComponent *com);
+	void removeComponent(const char *name);
+	void removeAllComponents();
+	ObjectComponent *getComponent(const char *name);
+
+	template<class T>
+	T *addComponent()
+	{
+		const char *classname = typeid(T).name();
+		ObjectComponent *com = new T;
+		if (com)
+		{
+			com->addComponent(classname, com);
+		}
+		return dynamic_cast<T *>(com);
+	}
+	template<class T>
+	void removeComponent()
+	{
+		const char *classname = typeid(T).name();
+		removeComponent(classname);	
+	}
+	template<class T>
+	T *getComponent()
+	{
+		const char *classname = typeid(T).name();
+		auto com = getComponent(name);
+		if (com)
+		{
+			return dynamic_cast<T *>(com);
+		}
+		return nullptr;
+	}
 
 	// 对象属性读写方法;
 	void removeProperty(const char *name);
@@ -49,9 +84,6 @@ public:
 	inline const Fixed &hp() const { return m_hp; }
 	inline const Fixed &maxhp() const { return m_maxhp; }
 	inline const Fixed &atk() const { return m_atk; }
-
-	// 是否是敌人;
-	inline bool isEnemy() const { return m_isEnemy; }
 
 	// 对象状态;
 	inline GameObjectState getState() { return m_state; }
@@ -79,6 +111,10 @@ public:
 	inline void setDesiredPositionX(const Fixed &x) { m_desiredPosition.x = x; }
 	inline void setDesiredPositionY(const Fixed &y) { m_desiredPosition.x = y; }
 
+	// 对象朝向;
+	inline GameObjectDirection getDirection() { return m_direction; }
+	inline void setDirection(GameObjectDirection direction) { m_direction = direction; }
+
 	// 移动速度;
 	inline void setMoveSpeed(const Fixed &speed) { m_moveSpeed = speed; }
 	inline const Fixed &getMoveSpeed() { return m_moveSpeed; }
@@ -104,7 +140,18 @@ public:
 	// 对象受击盒;
 	inline MapRect &getHitBox() { return m_hitBox; }
 
+	// 是否显示受击盒;
+	inline bool isShowHitBox() { return m_showHitBox; }
+
+	// 动画信息;
+	inline const char *getAnimationFile() { return m_animationFile.empty() ? nullptr : m_animationFile.c_str(); }
+	inline const char *getAnimationName() { return m_animationName.empty() ? nullptr : m_animationName.c_str(); }
+	inline const char *getAnimationDefaultAction() { return m_animationDefaultAction.empty() ? nullptr : m_animationDefaultAction.c_str(); }
+	inline const Fixed &getAnimationScale() { return m_animationScale; }
+
 private:
+	typedef std::map<std::string, ObjectComponent *> ComponentMap;
+	typedef std::pair<std::string, ObjectComponent *> ComponentMapPair;
 
 	struct PropertyValue
 	{
@@ -114,6 +161,8 @@ private:
 	typedef std::map<std::string, PropertyValue> PropertyMap;
 	typedef std::pair<std::string, PropertyValue> PropertyMapPair;
 
+private:
+	ComponentMap m_componentMap;			// 对象组件表;
 	PropertyMap m_propertyMap;				// 对象属性表;
 	BlackBoard m_blackboard;				// 对象数据黑板（行为树的输入输出参数）;
 
@@ -122,9 +171,10 @@ private:
 	int m_id;								// 对象ID;
 
 	int m_group;							// 对象组ID;
-	bool m_isEnemy;
 
 	GameObjectState m_state;				// 对象状态;
+
+	GameObjectDirection m_direction;		// 对象朝向;
 
 	MapPoint m_position;					// 对象位置;
 
@@ -138,6 +188,7 @@ private:
 	int m_currentBehaviorIntervalFrames;	// 对象行为更新频率（帧）;
 
 	MapRect m_hitBox;						// 对象受击盒;
+	bool m_showHitBox;						// 是否显示受击盒;
 	MapRect m_attackArea;					// 对象攻击区域;
 
 
@@ -154,6 +205,11 @@ private:
 	Fixed m_hp;								// 对象当前血量;
 	Fixed m_maxhp;							// 对象最大血量;
 	Fixed m_atk;							// 对象攻击力;
+
+	std::string m_animationFile;			// 动画文件名;
+	std::string m_animationName;			// 动画名;
+	std::string m_animationDefaultAction;	// 默认动作名;
+	Fixed m_animationScale;					// 动画拉伸倍数;
 };
 
 #endif // GameObject_h__
