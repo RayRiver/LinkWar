@@ -8,8 +8,6 @@
 
 USING_NS_CC;
 
-int g_id = 0;
-
 MapManager *MapManager::s_instance = nullptr;
 
 MapManager * MapManager::getInstance()
@@ -56,30 +54,6 @@ bool MapManager::loadData(const char *config)
 	// 创建地图视图;
 	m_view = MapView::create();
 	this->addChild(m_view);
-
-	// 注册点击事件;
-	auto listener = EventListenerTouchAllAtOnce::create();
-	listener->onTouchesBegan = [=](const std::vector<Touch*> &touches, Event *event) {
-		for (const auto &touch : touches)
-		{
-			const auto &point = MapPoint(touch->getLocation());
-
-			if (m_data->m_selfLauncherArea.containsPoint(point))
-			{
-				// create entity;
-				auto self = OBJECTS->createObject(++g_id, 1, (int)GameObjectGroup::Group0);
-				self->setPosition(point);
-
-				// TODO: create opposite entity at random position;
-				MapPoint p;
-				p.x = rand() % (int)(m_data->m_oppoLauncherArea.w) + (int)(m_data->m_oppoLauncherArea.x);
-				p.y = rand() % (int)(m_data->m_oppoLauncherArea.h) + (int)(m_data->m_oppoLauncherArea.y);
-				auto oppo = OBJECTS->createObject(++g_id, 1, (int)GameObjectGroup::Group1);
-				oppo->setPosition(p);
-			}
-		}
-	};
-	m_view->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, m_view);
 
 	return true;
 }

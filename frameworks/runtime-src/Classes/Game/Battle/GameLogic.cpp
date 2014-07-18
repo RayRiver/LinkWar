@@ -20,6 +20,7 @@ GameLogic * GameLogic::getInstance()
 }
 
 GameLogic::GameLogic()
+	: m_objectIdIndex(0)
 {
 
 }
@@ -27,6 +28,26 @@ GameLogic::GameLogic()
 GameLogic::~GameLogic()
 {
 
+}
+
+void GameLogic::handleTouch( const MapPoint & point )
+{
+	const auto &selfArea = MAP->getSelfLauncherArea();
+	const auto &oppoArea = MAP->getOppoLauncherArea();
+
+	if (selfArea.containsPoint(point))
+	{
+		// 创建对象;
+		auto self = OBJECTS->createObject(++m_objectIdIndex, 1, (int)GameObjectGroup::Group0);
+		self->setPosition(point);
+
+		// 临时创建对方对象，在随机位置;
+		MapPoint p;
+		p.x = rand() % (int)(oppoArea.w) + (int)(oppoArea.x);
+		p.y = rand() % (int)(oppoArea.h) + (int)(oppoArea.y);
+		auto oppo = OBJECTS->createObject(++m_objectIdIndex, 1, (int)GameObjectGroup::Group1);
+		oppo->setPosition(p);
+	}
 }
 
 void GameLogic::handleLogicFrame( LogicFrame *frame )

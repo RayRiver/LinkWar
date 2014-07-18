@@ -25,9 +25,6 @@
     <Filter Include="Game\Helper">
       <UniqueIdentifier>{e5839f73-417c-47a1-9391-a597b8d2da85}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Battle\Behavior">
-      <UniqueIdentifier>{441fd4cc-6014-4272-94c5-a5c084b1ca70}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Battle\Object">
       <UniqueIdentifier>{c90a213f-b5b5-4ba8-857a-71069a521364}</UniqueIdentifier>
     </Filter>
@@ -36,6 +33,12 @@
     </Filter>
     <Filter Include="Game\Base">
       <UniqueIdentifier>{21e52025-73f1-44ad-a6da-15a75e0b6ab6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Battle\Logic">
+      <UniqueIdentifier>{d1e1bd89-1fe4-4e28-abe6-6006ddc6428f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Battle\Object\Behavior">
+      <UniqueIdentifier>{441fd4cc-6014-4272-94c5-a5c084b1ca70}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -113,39 +116,36 @@
       <Filter>Game\Helper</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\CON_EnemyCanAttack.h">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\CON_FoundEnemy.h">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\CON_HP0.h">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\CON_ReachedBattleField.h">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\NOD_Attack.h">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\NOD_Die.h">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\NOD_Idle.h">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\NOD_MoveToAttack.h">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\NOD_MoveToBattleField.h">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\BlackBoard.h">
       <Filter>Game\Battle\Object</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\PathFinder.h">
-      <Filter>Game\Battle\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Game\Battle\LogicFrame.h">
       <Filter>Game\Battle\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Base\Log.h">
@@ -190,9 +190,6 @@
     <ClInclude Include="..\Classes\Game\Battle\MessageDef.h">
       <Filter>Game\Battle\Map</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Game\Battle\UserData.h">
-      <Filter>Game\Battle\Map</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Game\Base\Fixed.h">
       <Filter>Game\Base</Filter>
     </ClInclude>
@@ -214,14 +211,20 @@
     <ClInclude Include="..\Classes\Game\Battle\GameObjectManager.h">
       <Filter>Game\Battle\Object</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Game\Battle\GameLogic.h">
-      <Filter>Game\Battle\Map</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\MapStructs.h">
       <Filter>Game\Battle\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\GameObjectMacros.h">
       <Filter>Game\Battle\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\GameLogic.h">
+      <Filter>Game\Battle\Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\LogicFrame.h">
+      <Filter>Game\Battle\Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\UserData.h">
+      <Filter>Game\Battle\Logic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -295,39 +298,36 @@
       <Filter>Game\Helper</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\CON_EnemyCanAttack.cpp">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\CON_FoundEnemy.cpp">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\CON_HP0.cpp">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\CON_ReachedBattleField.cpp">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\NOD_Attack.cpp">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\NOD_Die.cpp">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\NOD_Idle.cpp">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\NOD_MoveToAttack.cpp">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\NOD_MoveToBattleField.cpp">
-      <Filter>Game\Battle\Behavior</Filter>
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\BlackBoard.cpp">
       <Filter>Game\Battle\Object</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\PathFinder.cpp">
-      <Filter>Game\Battle\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Battle\LogicFrame.cpp">
       <Filter>Game\Battle\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Base\Log.cpp">
@@ -357,9 +357,6 @@
     <ClCompile Include="..\Classes\Game\Base\BitStream.cpp">
       <Filter>Game\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Game\Battle\UserData.cpp">
-      <Filter>Game\Battle\Map</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Game\Base\Fixed.cpp">
       <Filter>Game\Base</Filter>
     </ClCompile>
@@ -381,11 +378,17 @@
     <ClCompile Include="..\Classes\Game\Battle\GameObjectManager.cpp">
       <Filter>Game\Battle\Object</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Game\Battle\GameLogic.cpp">
-      <Filter>Game\Battle\Map</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\MapStructs.cpp">
       <Filter>Game\Battle\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\GameLogic.cpp">
+      <Filter>Game\Battle\Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\LogicFrame.cpp">
+      <Filter>Game\Battle\Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\UserData.cpp">
+      <Filter>Game\Battle\Logic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

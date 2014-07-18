@@ -12,7 +12,7 @@ public:
 	enum class Type
 	{
 		None = 0,
-		Barrier = 0xff,
+		Barrier = 1,
 	};
 
 	Fixed x, y;

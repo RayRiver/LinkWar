@@ -9,7 +9,7 @@ function SceneClass:ctor()
     local label = cc.Label:createWithSystemFont("Start", "Arial", 64)
     local menuItem = cc.MenuItemLabel:create(label)
     menuItem:registerScriptTapHandler(function(tag) 
-        app:enterScene("game_scene")
+        app:enterScene("battle_scene")
         --display.replaceScene(BattleScene:createScene())
     end)
         

@@ -3,6 +3,7 @@
 #include "Helper/Display.h"
 
 #include "MapManager.h"
+#include "GameLogic.h"
 
 USING_NS_CC;
 
@@ -52,6 +53,17 @@ bool MapView::init()
 	createLauncherArea();
 	createBattleFieldArea();
 	createTerrain();
+
+	// ×¢²áµã»÷ÊÂ¼þ;
+	auto listener = EventListenerTouchAllAtOnce::create();
+	listener->onTouchesBegan = [=](const std::vector<Touch*> &touches, Event *event) {
+		for (const auto &touch : touches)
+		{
+			const auto &point = MapPoint(touch->getLocation());
+			GameLogic::getInstance()->handleTouch(point);
+		}
+	};
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
 	return true;
 }
