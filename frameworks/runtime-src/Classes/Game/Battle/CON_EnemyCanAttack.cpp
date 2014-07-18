@@ -2,47 +2,36 @@
 
 #include "BlackBoard.h"
 #include "MapManager.h"
-#include "GameEntity.h"
+#include "GameObjectManager.h"
+#include "GameObject.h"
 
 bool CON_EnemyCanAttack::onEvaluate(const BTInputParam& input) const
 {
 	const BlackBoard& inputData	= input.getRealData<BlackBoard>();
 
-	auto map = inputData.mapManager;
 	auto self = inputData.self;
 
 	auto area = self->getAttackArea();
-	area.origin.x += self->getPositionX();
-	area.origin.y += self->getPositionY();
+	area.x += self->getPositionX();
+	area.y += self->getPositionY();
 
-	// find attack target
-	GameEntity *foundEntity = nullptr;
-	if (self->isEnemy())
-	{
-		for (const auto &it : map->getSelfEntities())
+	// 寻找可攻击目标;
+	GameObject *foundObject = nullptr;
+	OBJECTS->callObjects([&](GameObject *object, GameObjectView *view) -> bool {
+		if (!object->shouldClean() && object->group() != self->group()) // 对象不销毁，非同组;
 		{
-			const auto &entity = it.second;
-			if (!entity->shouldClean() && area.containsPoint(entity->getPosition()))	
+			if (area.containsPoint(object->getPosition()))
 			{
-				foundEntity = entity;
+				foundObject = object;
+				return false;	// 寻找第一个可攻击目标;
 			}
-		}	
-	}
-	else
-	{
-		for (const auto &it : map->getOppoEntities())
-		{
-			const auto &entity = it.second;
-			if (!entity->shouldClean() && area.containsPoint(entity->getPosition()))	
-			{
-				foundEntity = entity;
-			}
-		}		
-	}
+		}
+		return true;
+	});
 
-	if (foundEntity)
+	if (foundObject)
 	{
-		self->setAttackTarget(foundEntity);
+		self->setAttackTarget(foundObject);
 		return true;
 	}
 	else

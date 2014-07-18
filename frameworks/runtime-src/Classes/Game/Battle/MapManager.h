@@ -1,100 +1,86 @@
 #ifndef MapManager_h__
 #define MapManager_h__
 
-#include <map>
-
 #include "cocos2d.h"
 
-extern const int GRID_SIZE_W;
-extern const int GRID_SIZE_H;
+#include "MapStructs.h"
 
-class GameEntity;
-struct LogicFrameAction;
-class MapManager : public cocos2d::Layer
+class GameObject;
+class LogicFrame;
+class MapData;
+class MapView;
+
+class MapManager : public cocos2d::Node
 {
 public:
-	struct Grid
+	enum
 	{
-		int x, y;
-		Grid(int _x=-1, int _y=-1) : x(_x), y(_y) {}
-		inline bool operator==(const Grid &other) {
-			return x==other.x && y==other.y;
-		}
-		inline bool operator!=(const Grid &other) {
-			return x!=other.x || y!=other.y;
-		}
-	};
+		LAYER_BG = -5,
+		LAYER_GRID = -4,
+		LAYER_TERRAIN = -3,
+		LAYER_LAUNCHER_AREA = -2,
+		LAYER_BATTLE_FIELD_AREA = -2,
+		LAYER_MAP_DEBUGINFO = -1,
 
-	enum GridType
-	{
-		Barrier = 0xff,
+		LAYER_MAP_NODE_BEGIN = 0,
+		// ...
+		LAYER_MAP_NODE_END = 9999,
+
+		LAYER_DEBUGINFO = 10000,
 	};
 
 public:
-	MapManager();
+	static MapManager *getInstance();
+	static void destroyInstance();
 	~MapManager();
 
-	static MapManager *create(const char *config);
-	bool init(const char *config);
-	void update(float dt);
+	bool loadData(const char *config);
+	void reset();
 
-	void updateEntity(GameEntity *entity, float dt);
+	void handleLogicFrame(LogicFrame *frame);
 
-	void createMap(const char *config);
-	void createBg();
-	void createGrid();
-	void createLauncherArea();
-	void createBattleFieldArea();
-	void createTerrain();
+	GameObject *createObject(const char *config, int id, bool isEnemy, const MapPoint &pos);
+	void moveObject(GameObject *object);
 
-	GameEntity *createEntity(int id, bool isEnemy, const cocos2d::Vec2 &pos);
+	// 地图信息;
+	const Fixed &mapW();
+	const Fixed &mapH();
+	const Fixed &gridW();
+	const Fixed &gridH();
+	const Fixed &displayW();
+	const Fixed &displayH();
+	const MapGridData &data(int key);
 
-	void moveEntity(GameEntity *entity);
+	const MapRect &getSelfLauncherArea();
+	const MapRect &getOppoLauncherArea();
+	const MapRect &getBattleFieldArea();
 
-	void handleFrame(LogicFrameAction *action);
+	// 地图格子引用;
+	void retainGrid(const Fixed &x, const Fixed &y);
+	void releaseGrid(const Fixed &x, const Fixed &y);
+	int getGridRef(const Fixed &x, const Fixed &y);
+	MapGrid::Type getGridType(const Fixed &x, const Fixed &y);
+	bool isGridBarrier(const Fixed &x, const Fixed &y);
 
-	inline const unsigned char *getMap() { return m_map; }
-	inline int getMapW() { return m_w; }
-	inline int getMapH() { return m_h; }
-
-	void retainGrid(int x, int y);
-	void releaseGrid(int x, int y);
-	inline int getGridRef(int x, int y) { return m_map[y*m_w+x]; }
-
-	inline const cocos2d::Rect &getBattleFieldArea() { return m_battleFieldArea; }
-	inline std::map<int, GameEntity *> &getSelfEntities() { return m_selfEntities; }
-	inline std::map<int, GameEntity *> &getOppoEntities() { return m_oppoEntities; }
-
-public:
-	inline Grid pos2grid(const cocos2d::Vec2 &pos) {
-		Grid grid;
-		grid.x = (int)pos.x / GRID_SIZE_W;
-		grid.y = (int)pos.y / GRID_SIZE_H;
-		return grid;
-	}
-	inline cocos2d::Vec2 grid2pos(const Grid &grid) {
-		cocos2d::Vec2 pos;
-		pos.x = (grid.x+0.5) * GRID_SIZE_W;
-		pos.y = (grid.y+0.5) * GRID_SIZE_H;
-		return pos;
-	}
-	inline int grid2key(const Grid &grid) {
-		return grid.y*m_w + grid.x;
-	}
-	inline int grid2key(int x, int y) {
-		return y*m_w + x;
-	}
+	// 辅助方法;
+	MapGrid pos2grid(const MapPoint &pos);
+	MapPoint grid2pos(const MapGrid &grid);
+	int grid2key(const MapGrid &grid);
+	int grid2key(const Fixed &x, const Fixed &y);
+	void rect2points(const MapRect &r, MapPoint *points);
 
 private:
-	unsigned char *m_map;
-	int m_w, m_h;
+	MapManager();
+	static MapManager *s_instance;
 
-	cocos2d::Rect m_selfLauncherArea;
-	cocos2d::Rect m_oppoLauncherArea;
-	cocos2d::Rect m_battleFieldArea;
+	MapData *m_data;
+	MapView *m_view;
 
-	std::map<int, GameEntity *> m_selfEntities;
-	std::map<int, GameEntity *> m_oppoEntities;
+	std::map<int, GameObject *> m_selfObjectMap;
+	std::map<int, GameObject *> m_oppoObjectMap;
+
 };
+
+#define MAP MapManager::getInstance()
 
 #endif // MapManager_h__

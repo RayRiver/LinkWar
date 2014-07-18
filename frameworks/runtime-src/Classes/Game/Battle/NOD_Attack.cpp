@@ -1,7 +1,7 @@
 #include "NOD_Attack.h"
 
 #include "BlackBoard.h"
-#include "GameEntity.h"
+#include "GameObject.h"
 
 void NOD_Attack::onEnter( const BTInputParam &input )
 {

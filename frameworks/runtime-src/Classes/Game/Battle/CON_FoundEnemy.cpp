@@ -3,18 +3,19 @@
 #include "Helper/Display.h"
 
 #include "BlackBoard.h"
+#include "GameObjectMacros.h"
+#include "GameObject.h"
+#include "GameObjectManager.h"
 #include "MapManager.h"
-#include "GameEntity.h"
 
 bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 {
 	const BlackBoard& inputData	= input.getRealData<BlackBoard>();
 
-	auto map = inputData.mapManager;
 	auto self = inputData.self;
 
 	/*
-	// 已经有攻击对象了,且该攻击对象可以攻击到
+	// 已经有攻击对象了,且该攻击对象可以攻击到;
 	if (self->getState() == GameEntity::State::MoveToAttack && self->getAttackTarget())
 	{
 		auto attackTarget = self->getAttackTarget();
@@ -26,46 +27,26 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 	*/
 
 	auto pos = self->getPosition();
-	float distance2 = 0.0f;
+	Fixed distance2 = Fixed::ZERO;
 
-	// find attack target
-	GameEntity *foundEntity = nullptr;
-	if (self->isEnemy())
-	{
-		for (const auto &it : map->getSelfEntities())
+	// 寻找最近的攻击目标;
+	GameObject *foundObject = nullptr;
+	OBJECTS->callObjects([&](GameObject *object, GameObjectView *view) -> bool {
+		if (!object->shouldClean() && object->group() != self->group()) // 对象不销毁，非同组;
 		{
-			const auto &entity = it.second;
-			if (!entity->shouldClean())
+			auto &d2 = (object->getPosition() - pos).lengthSquared();
+			if (!foundObject || d2 < distance2)
 			{
-				float d2 = (entity->getPosition() - pos).lengthSquared();
-				if (!foundEntity || d2 < distance2)
-				{
-					distance2 = d2;
-					foundEntity = entity;
-				}
+				distance2 = d2;
+				foundObject = object;
 			}
-		}	
-	}
-	else
-	{
-		for (const auto &it : map->getOppoEntities())
-		{
-			const auto &entity = it.second;
-			if (!entity->shouldClean())
-			{
-				float d2 = (entity->getPosition() - pos).lengthSquared();
-				if (!foundEntity || d2 < distance2)
-				{
-					distance2 = d2;
-					foundEntity = entity;
-				};
-			}
-		}	
-	}
+		}
+		return true;
+	});
 
-	if (foundEntity)
+	if (foundObject)
 	{
-		self->setAttackTarget(foundEntity);
+		self->setAttackTarget(foundObject);
 		return true;
 	}
 	else

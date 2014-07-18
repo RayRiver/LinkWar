@@ -3,16 +3,14 @@
 
 #include "cocos2d.h"
 
-class MapManager;
-class GameEntity;
+class GameObject;
 class BlackBoard
 {
 public:
 	BlackBoard();
 	~BlackBoard();
 
-	MapManager *mapManager;
-	GameEntity *self;
+	GameObject *self;
 };
 
 #endif // BlackBoard_h__

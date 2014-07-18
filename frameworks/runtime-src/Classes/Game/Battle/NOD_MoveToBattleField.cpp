@@ -1,11 +1,11 @@
 #include "NOD_MoveToBattleField.h"
 
 #include "cocos2d.h"
-#include "CCLuaValue.h"
 
 #include "BlackBoard.h"
-#include "GameEntity.h"
+#include "GameObject.h"
 #include "MapManager.h"
+#include "GameObjectManager.h"
 
 USING_NS_CC;
 
@@ -13,22 +13,21 @@ void NOD_MoveToBattleField::onEnter( const BTInputParam &input )
 {
 	const BlackBoard &inputData = input.getRealData<BlackBoard>();
 
-	auto map = inputData.mapManager;
 	auto self = inputData.self;
 
-	const auto &rect = map->getBattleFieldArea();
+	const auto &rect = MAP->getBattleFieldArea();
 	const auto &pos = self->getPosition();
 	const auto &hitbox = self->getHitBox();
 
-	Vec2 target;
+	MapPoint target;
 	target.x = pos.x;
-	if (self->isEnemy())
+	if (self->group() == (int)GameObjectGroup::Group0)
 	{
-		target.y = rect.origin.y + rect.size.height - hitbox.size.height/2;
+		target.y = rect.y + hitbox.h/Fixed(2);
 	}
 	else
 	{
-		target.y = rect.origin.y + hitbox.size.height/2;
+		target.y = rect.y + rect.h - hitbox.h/Fixed(2);
 	}
 
 	self->move(target);
@@ -44,12 +43,11 @@ BTRunningStatus NOD_MoveToBattleField::onExecute( const BTInputParam& input, BTO
 	const BlackBoard &inputData = input.getRealData<BlackBoard>();
 	BlackBoard &outputData = output.getRealData<BlackBoard>();
 
-	auto map = inputData.mapManager;
 	auto self = inputData.self;
 
 	if (self->getPosition() == self->getMoveTarget())
 	{
-		self->setProperty("isReachedBattleField", LuaValue::booleanValue(true));
+		self->setProperty("isReachedBattleField", Fixed::ONE);
 		return BTRunningStatus::Finish;
 	}
 	else

@@ -4,8 +4,10 @@
 #include <vector>
 #include <deque>
 
-struct LogicFrameAction
+// Âß¼­Ö¡²Ù×÷;
+class LogicFrameAction
 {
+public:
 	enum class Type
 	{
 		CreateEntity = 1,
@@ -19,8 +21,10 @@ struct LogicFrameAction
 	int id;
 };
 
-struct LogicFrame
+// Âß¼­Ö¡;
+class LogicFrame
 {
+public:
 	std::vector<LogicFrameAction *> actions;
 	~LogicFrame() {
 		for (auto action : actions)
@@ -30,6 +34,7 @@ struct LogicFrame
 	}
 };
 
+// Âß¼­Ö¡¹ÜÀíÆ÷;
 class LogicFrameManager
 {
 public:

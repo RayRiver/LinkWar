@@ -139,17 +139,8 @@
     <ClInclude Include="..\Classes\Game\Battle\NOD_MoveToBattleField.h">
       <Filter>Game\Battle\Behavior</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Game\Battle\BehaviorComponent.h">
-      <Filter>Game\Battle\Object</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\BlackBoard.h">
       <Filter>Game\Battle\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Game\Battle\GameEntity.h">
-      <Filter>Game\Battle\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Game\Battle\MapManager.h">
-      <Filter>Game\Battle\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\PathFinder.h">
       <Filter>Game\Battle\Map</Filter>
@@ -201,6 +192,36 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\UserData.h">
       <Filter>Game\Battle\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Base\Fixed.h">
+      <Filter>Game\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\GameObject.h">
+      <Filter>Game\Battle\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\MapView.h">
+      <Filter>Game\Battle\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\MapData.h">
+      <Filter>Game\Battle\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\MapManager.h">
+      <Filter>Game\Battle\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\GameObjectView.h">
+      <Filter>Game\Battle\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\GameObjectManager.h">
+      <Filter>Game\Battle\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\GameLogic.h">
+      <Filter>Game\Battle\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\MapStructs.h">
+      <Filter>Game\Battle\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\GameObjectMacros.h">
+      <Filter>Game\Battle\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -300,17 +321,8 @@
     <ClCompile Include="..\Classes\Game\Battle\NOD_MoveToBattleField.cpp">
       <Filter>Game\Battle\Behavior</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Game\Battle\BehaviorComponent.cpp">
-      <Filter>Game\Battle\Object</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\BlackBoard.cpp">
       <Filter>Game\Battle\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Battle\GameEntity.cpp">
-      <Filter>Game\Battle\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Battle\MapManager.cpp">
-      <Filter>Game\Battle\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\PathFinder.cpp">
       <Filter>Game\Battle\Map</Filter>
@@ -346,6 +358,33 @@
       <Filter>Game\Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\UserData.cpp">
+      <Filter>Game\Battle\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Base\Fixed.cpp">
+      <Filter>Game\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\GameObject.cpp">
+      <Filter>Game\Battle\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\MapView.cpp">
+      <Filter>Game\Battle\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\MapData.cpp">
+      <Filter>Game\Battle\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\MapManager.cpp">
+      <Filter>Game\Battle\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\GameObjectView.cpp">
+      <Filter>Game\Battle\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\GameObjectManager.cpp">
+      <Filter>Game\Battle\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\GameLogic.cpp">
+      <Filter>Game\Battle\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\MapStructs.cpp">
       <Filter>Game\Battle\Map</Filter>
     </ClCompile>
   </ItemGroup>

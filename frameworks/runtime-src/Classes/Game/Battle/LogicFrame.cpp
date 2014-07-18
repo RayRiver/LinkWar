@@ -2,6 +2,8 @@
 
 #include "cocos2d.h"
 
+#include "GameLogic.h"
+
 using namespace std;
 
 LogicFrameManager *LogicFrameManager::s_instance = nullptr;
@@ -31,8 +33,8 @@ void LogicFrameManager::init()
 {
 	clear();
 
-	// TODO: 临时自动生成
-	//cocos2d::Director::getInstance()->getScheduler()->scheduleUpdate(this, 0, false);
+	// TODO: 临时自动生成;
+	cocos2d::Director::getInstance()->getScheduler()->scheduleUpdate(this, 0, false);
 
 }
 
@@ -50,7 +52,9 @@ void LogicFrameManager::clear()
 
 void LogicFrameManager::update( float dt )
 {
-	m_frameQueue.push_back(nullptr);
+	//m_frameQueue.push_back(nullptr);
+
+	GameLogic::getInstance()->handleLogicFrame(nullptr);
 }
 
 void LogicFrameManager::addFrame( LogicFrame *frame )

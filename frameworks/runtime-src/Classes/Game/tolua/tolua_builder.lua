@@ -96,7 +96,10 @@ function post_output_hook(package)
 #include "CCLuaValue.h"
 #include "LuaBasicConversions.h"
 
+#include "Battle/LogicFrame.h"
 #include "Battle/MapManager.h"
+#include "Battle/MapView.h"
+#include "Battle/GameObjectManager.h"
 
 USING_NS_CC;
 
@@ -126,6 +129,7 @@ TOLUA_API int  tolua_userext_open (lua_State* tolua_S);]], [[]])
       replace([[cocos2d::Rect rect = *((cocos2d::Rect*)  tolua_tousertype(tolua_S,2,0));]], [[cocos2d::Rect rect;
   luaval_to_rect(tolua_S, 2, &rect);]])
 
+      replace([["cocos2d::Node"]], [["cc.Node"]])
 
       replace('\t', '    ')
 

@@ -3,7 +3,6 @@
 USING_NS_CC;
 
 BlackBoard::BlackBoard()
-	: mapManager(nullptr)
 {
 
 }

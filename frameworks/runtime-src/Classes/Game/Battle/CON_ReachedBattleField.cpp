@@ -1,10 +1,9 @@
 #include "CON_ReachedBattleField.h"
 
 #include "cocos2d.h"
-#include "CCLuaValue.h"
 
 #include "BlackBoard.h"
-#include "GameEntity.h"
+#include "GameObject.h"
 
 USING_NS_CC;
 
@@ -14,10 +13,10 @@ bool CON_ReachedBattleField::onEvaluate(const BTInputParam& input) const
 
 	auto self = inputData.self;
 
-	LuaValue val;
+	Fixed val;
 	if (self->getProperty("isReachedBattleField", val))
 	{
-		return val.booleanValue();
+		return val!=Fixed::ZERO;
 	}
 	else
 	{

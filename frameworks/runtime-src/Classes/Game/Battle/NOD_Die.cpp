@@ -3,7 +3,7 @@
 #include "cocos2d.h"
 
 #include "BlackBoard.h"
-#include "GameEntity.h"
+#include "GameObject.h"
 
 USING_NS_CC;
 

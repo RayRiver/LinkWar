@@ -8,8 +8,17 @@ local SceneClass = class(SCENE_NAME, function()
 end)
 
 function SceneClass:ctor()
-    local map = MapManager:create("config/map1.json")
-    self:addChild(map)
+    local mapManager = MapManager:getInstance()
+    self:addChild(mapManager)
+    
+    local objectManager = GameObjectManager:getInstance()
+    self:addChild(objectManager)
+    
+    local ret = mapManager:loadData("config/map1.json")
+    
+    LogicFrameManager:getInstance():init()
+
+    printInfo("map manager load return " .. tostring(ret))
     do return end
 
 

@@ -1,13 +1,9 @@
 #include "CON_HP0.h"
 
 #include "cocos2d.h"
-#include "CCLuaValue.h"
-
-#include "Helper/Display.h"
 
 #include "BlackBoard.h"
-#include "MapManager.h"
-#include "GameEntity.h"
+#include "GameObject.h"
 
 USING_NS_CC;
 
@@ -17,17 +13,9 @@ bool CON_HP0::onEvaluate(const BTInputParam& input) const
 
 	auto self = inputData.self;
 
-	LuaValue val;
-	if (self->getProperty("hp", val))
+	if (self->hp() == Fixed::ZERO)
 	{
-		if (val.floatValue() == 0.0f)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return true;
 	}
 	else
 	{
