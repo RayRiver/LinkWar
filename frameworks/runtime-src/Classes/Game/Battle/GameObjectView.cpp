@@ -148,34 +148,40 @@ void GameObjectView::playAnimationWithDirection( const char *prefix )
 	}
 
 	auto direction = GAME_OBJECT(m_id)->getDirection();
+	auto scaleX = m_armature->getScaleX();
 
-	// 解析动画名;
+	// 解析动画名和方向;
 	std::string name = prefix;
 	switch (direction)
 	{
 	case GameObjectDirection::Left:
 		name.append("_left");
+		if (scaleX < 0)
+		{
+			m_armature->setScaleX(-scaleX);
+		}
 		break;
 	case GameObjectDirection::Right:
 		name.append("_left");
+		if (scaleX > 0)
+		{
+			m_armature->setScaleX(-scaleX);
+		}
 		break;
 	case GameObjectDirection::Up:
 		name.append("_up");
+		if (scaleX < 0)
+		{
+			m_armature->setScaleX(-scaleX);
+		}
 		break;
 	case GameObjectDirection::Down:
 		name.append("_down");
+		if (scaleX < 0)
+		{
+			m_armature->setScaleX(-scaleX);
+		}
 		break;
-	}
-
-	// 解析方向;
-	float scaleX = m_armature->getScaleX();
-	if (direction == GameObjectDirection::Left && scaleX < 0)
-	{
-		m_armature->setScaleX(-scaleX);
-	}
-	else if (direction == GameObjectDirection::Right && scaleX > 0)
-	{
-		m_armature->setScaleX(-scaleX);
 	}
 
 	//m_armature->getAnimation()->play(name, -1, -1);
@@ -211,6 +217,10 @@ void GameObjectView::onDie()
 		m_armature->getAnimation()->setMovementEventCallFunc([=](cocostudio::Armature *armature, cocostudio::MovementEventType movementType, const std::string& movementID) {
 			if (movementType == cocostudio::MovementEventType::COMPLETE && movementID.compare("die") == 0)
 			{
+				// 血条不再显示;
+				m_hpBar->clear();
+
+				// 消失动画;
 				m_armature->runAction(Sequence::create(
 					DelayTime::create(0.5f),
 					FadeOut::create(1.0f),

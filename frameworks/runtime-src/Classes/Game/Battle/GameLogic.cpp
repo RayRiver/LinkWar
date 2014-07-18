@@ -89,6 +89,7 @@ void GameLogic::handleLogicFrame( LogicFrame *frame )
 		{
 			if (view->shouldClean())
 			{
+				// 加入待清理视图列表;
 				shouldCleanObjectViews.insert(std::make_pair(id, view));
 			}
 		}
