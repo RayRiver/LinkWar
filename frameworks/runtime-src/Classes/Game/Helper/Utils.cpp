@@ -33,8 +33,8 @@ Utils::~Utils()
 
 bool Utils::_init()
 {
-	if (!_loadConfig("config/text.json", m_docText, m_textMap, m_bTextLoaded)) return false;
 	if (!_loadConfig("config/global_setting.json", m_docGlobalSetting, m_globalSettingMap, m_bGlobalSettingLoaded)) return false;
+	if (!_loadConfig("config/text.json", m_docText, m_textMap, m_bTextLoaded)) return false;
 	return true;
 }
 

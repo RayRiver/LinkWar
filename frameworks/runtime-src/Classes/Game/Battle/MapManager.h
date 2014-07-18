@@ -42,6 +42,8 @@ public:
 	GameObject *createObject(const char *config, int id, bool isEnemy, const MapPoint &pos);
 	void moveObject(GameObject *object);
 
+	MapView *getView() { return m_view; }
+
 	// µÿÕº–≈œ¢;
 	const Fixed &mapW();
 	const Fixed &mapH();

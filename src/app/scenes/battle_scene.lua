@@ -8,11 +8,13 @@ end)
 function SceneClass:ctor()
     local mapManager = MapManager:getInstance()
     self:addChild(mapManager)
-    
-    local objectManager = GameObjectManager:getInstance()
-    self:addChild(objectManager)
-    
+        
+    -- 加载地图数据
     local ret = mapManager:loadData("config/map1.json")
+    
+    -- 对象管理器
+    local objectManager = GameObjectManager:getInstance()
+    mapManager:getView():addChild(objectManager, 100000)
     
     -- 持续产生逻辑帧
     LogicFrameManager:getInstance():init()

@@ -13,7 +13,8 @@ public:
 	static GameLogic *getInstance();
 	~GameLogic();
 
-	void handleTouch(const MapPoint &point);
+	void handleDragMap(const cocos2d::Vec2 &vec);
+	void handleTouch(const cocos2d::Vec2 &pos);
 	void handleLogicFrame(LogicFrame *frame);
 	void moveObject(GameObject *object);
 

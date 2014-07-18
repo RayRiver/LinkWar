@@ -1,5 +1,7 @@
 #include "PathFinder.h"
 
+#include "Helper/Utils.h"
+
 #include <math.h>
 
 using namespace std;
@@ -31,7 +33,7 @@ PathFinder::PathFinder()
 	, m_desX(-1)
 	, m_desY(-1)
 {
-
+	m_gridMaxContainCount = Utils::getGlobalSettingInt("map_grid_max_contain_objects_count", 1);
 }
 
 PathFinder::~PathFinder()
@@ -130,7 +132,7 @@ bool PathFinder::_checkChild( const Fixed &x, const Fixed &y, Node *parent )
 	// 节点不可达;
 	if ( x<Fixed(0) || x>=m_mapW || y<Fixed(0) || y>=m_mapH || 
 		m_map->isGridBarrier(x, y) ||
-		(m_map->getGridRef(x,y)>0 && (x!=m_desX||y!=m_desY)) ) 
+		(m_map->getGridRef(x,y)>=m_gridMaxContainCount && (x!=m_desX||y!=m_desY)) ) 
 	{
 		return true;
 	}

@@ -860,6 +860,8 @@ bool initRuntime()
     }
     
     searchPathArray.insert(searchPathArray.begin(),g_resourcePath);
+    searchPathArray.insert(searchPathArray.begin(),g_resourcePath+"src/");
+    searchPathArray.insert(searchPathArray.begin(),g_resourcePath+"res/");
     FileUtils::getInstance()->setSearchPaths(searchPathArray);
 
     return true;

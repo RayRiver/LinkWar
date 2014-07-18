@@ -8,6 +8,7 @@
 USING_NS_CC;
 
 const int RECT_POINTS = 4;
+const float DRAG_MIN_DISTANCE2 = 20.0f;
 
 MapView * MapView::create()
 {
@@ -25,6 +26,8 @@ MapView * MapView::create()
 }
 
 MapView::MapView()
+	: m_draggingTouch(nullptr)
+	, m_draggingMoveDistance2(0.0f)
 {
 
 }
@@ -57,10 +60,45 @@ bool MapView::init()
 	// ×¢²áµã»÷ÊÂ¼þ;
 	auto listener = EventListenerTouchAllAtOnce::create();
 	listener->onTouchesBegan = [=](const std::vector<Touch*> &touches, Event *event) {
+		CCASSERT(!m_draggingTouch, "");
+		m_draggingTouch = touches[0];
+	};
+	listener->onTouchesMoved = [=](const std::vector<Touch*> &touches, Event *event) {
+		CCASSERT(m_draggingTouch, "");
 		for (const auto &touch : touches)
 		{
-			const auto &point = MapPoint(touch->getLocation());
-			GameLogic::getInstance()->handleTouch(point);
+			if (m_draggingTouch == touch)
+			{
+				auto lastPoint = (touch->getPreviousLocation());
+				auto point = (touch->getLocation());
+
+				m_draggingMoveDistance2 += (point - lastPoint).lengthSquared();
+				if (m_draggingMoveDistance2 > DRAG_MIN_DISTANCE2)
+				{
+					GameLogic::getInstance()->handleDragMap(point - lastPoint);
+				}
+
+			}
+		}
+	};
+	listener->onTouchesEnded = [=](const std::vector<Touch*> &touches, Event *event) {
+		CCASSERT(m_draggingTouch, "");
+		for (const auto &touch : touches)
+		{
+			auto lastPoint = (touch->getPreviousLocation());
+			auto point = (touch->getLocation());
+
+			m_draggingMoveDistance2 += (point - lastPoint).lengthSquared();
+			if (m_draggingMoveDistance2 < DRAG_MIN_DISTANCE2)
+			{
+				GameLogic::getInstance()->handleTouch(point);
+			}
+
+			if ( m_draggingTouch == touch )
+			{
+				m_draggingTouch = nullptr;
+				m_draggingMoveDistance2 = 0.0f;
+			}
 		}
 	};
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);

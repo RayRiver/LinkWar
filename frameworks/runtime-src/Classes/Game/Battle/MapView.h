@@ -25,6 +25,8 @@ private:
 	Fixed m_gridW, m_gridH;
 	Fixed m_displayW, m_displayH;
 
+	cocos2d::Touch *m_draggingTouch;
+	float m_draggingMoveDistance2;
 };
 
 #endif // MapView_h__

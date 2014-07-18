@@ -22,9 +22,9 @@ public:
 	inline void clearPath() { m_path.clear(); }
 
 private:
-	// G: 从起始状态到当前状态的实际代价（准确）
-	// H: 从当前状态到目标状态的估计代价（曼哈顿法）
-	// F: 从起始状态到目标状态的预计代价（G+H）
+	// G: 从起始状态到当前状态的实际代价（准确）;
+	// H: 从当前状态到目标状态的估计代价（曼哈顿法）;
+	// F: 从起始状态到目标状态的预计代价（G+H）;
 	struct Node
 	{
 		Node() : F(0.0f), G(0.0f), H(0.0f), parent(nullptr) { point.x = -1; point.y = -1; }
@@ -40,6 +40,8 @@ private:
 	MapManager *m_map;
 	Fixed m_mapW, m_mapH;
 	Fixed m_orgX, m_orgY, m_desX, m_desY;
+
+	int m_gridMaxContainCount;
 
 	std::vector<Node *> m_openList;
 	std::map<int, Node *> m_openNodes;

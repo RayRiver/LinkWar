@@ -1,12 +1,14 @@
+class MapView : public cc.Layer
+{
+
+};
+
 class MapManager : public cc.Node
 {
 	static MapManager *getInstance();
 	bool loadData(const char *config);
-};
 
-class MapView : public cc.Layer
-{
-
+	MapView *getView();
 };
 
 class GameObjectManager : public cc.Node

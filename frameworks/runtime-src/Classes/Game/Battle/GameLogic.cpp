@@ -5,11 +5,15 @@ using namespace std;
 
 #include "LogicFrame.h"
 #include "MapManager.h"
+#include "MapView.h"
 #include "GameObjectManager.h"
 #include "GameObject.h"
 #include "GameObjectView.h"
 
+USING_NS_CC;
+
 GameLogic * GameLogic::s_instance = nullptr;
+
 GameLogic * GameLogic::getInstance()
 {
 	if (!s_instance)
@@ -30,8 +34,20 @@ GameLogic::~GameLogic()
 
 }
 
-void GameLogic::handleTouch( const MapPoint & point )
+void GameLogic::handleDragMap( const Vec2 &vec )
 {
+	// 处理移动地图事件;
+	const auto &pos = MAP->getView()->getPosition();
+	MAP->getView()->setPosition(pos + vec);
+
+}
+
+void GameLogic::handleTouch( const Vec2 & pos )
+{
+	Vec2 realpos = pos - MAP->getView()->getPosition();
+
+	const auto &point = MapPoint(realpos);
+
 	const auto &selfArea = MAP->getSelfLauncherArea();
 	const auto &oppoArea = MAP->getOppoLauncherArea();
 
