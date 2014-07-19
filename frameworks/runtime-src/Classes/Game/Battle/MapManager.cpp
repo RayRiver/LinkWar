@@ -187,13 +187,13 @@ void MapManager::rect2points( const MapRect &r, MapPoint *points )
 	points[3].y = r.y + r.h;
 }
 
-const MapRect & MapManager::getSelfLauncherArea()
+const std::vector<MapGrid> & MapManager::getSelfLauncherGrids()
 {
-	return m_data->m_selfLauncherArea;
+	return m_data->m_selfLauncherGrids;
 }
 
-const MapRect & MapManager::getOppoLauncherArea()
+const std::vector<MapGrid> & MapManager::getOppoLauncherGrids()
 {
-	return m_data->m_oppoLauncherArea;
+	return m_data->m_oppoLauncherGrids;
 }
 

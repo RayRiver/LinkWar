@@ -117,9 +117,20 @@ void GameObjectView::onInitialized()
 void GameObjectView::updateHPBar()
 {
 	const auto object = GAME_OBJECT(m_id);
+
+	Color4F color;
+	if (object->group() == (int)GameObjectGroup::Group0)
+	{
+		color = Color4F(0.0f, 1.0f, 0.0f, 1.0f);
+	}
+	else if (object->group() == (int)GameObjectGroup::Group1)
+	{
+		color = Color4F(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+
 	m_hpBar->drawSegment(Vec2(-20, 30), Vec2(20, 30), 5.0f, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
 	m_hpBar->drawSegment(Vec2(-20, 30), Vec2(20, 30), 4.0f, Color4F(0.0f, 0.0f, 0.0f, 1.0f));
-	m_hpBar->drawSegment(Vec2(-20, 30), Vec2(-20+40*(float)(object->hp() / object->maxhp()), 30), 4.0f, Color4F(1.0f, 0.0f, 0.0f, 1.0f));
+	m_hpBar->drawSegment(Vec2(-20, 30), Vec2(-20+40*(float)(object->hp() / object->maxhp()), 30), 4.0f, color);
 }
 
 void GameObjectView::updateZOrder()

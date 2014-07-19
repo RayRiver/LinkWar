@@ -53,8 +53,8 @@ public:
 	const Fixed &displayH();
 	const MapGridData &data(int key);
 
-	const MapRect &getSelfLauncherArea();
-	const MapRect &getOppoLauncherArea();
+	const std::vector<MapGrid> &getSelfLauncherGrids();
+	const std::vector<MapGrid> &getOppoLauncherGrids();
 
 	// 地图格子引用;
 	void retainGrid(const Fixed &x, const Fixed &y);

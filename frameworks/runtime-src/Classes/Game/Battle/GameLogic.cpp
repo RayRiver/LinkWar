@@ -46,28 +46,34 @@ void GameLogic::handleTouch( const Vec2 & pos )
 	Vec2 realpos = pos - MAP->getView()->getPosition();
 
 	const auto &point = MapPoint(realpos);
+	const auto &touch_grid = MAP->pos2grid(point);
 
-	const auto &selfArea = MAP->getSelfLauncherArea();
-	const auto &oppoArea = MAP->getOppoLauncherArea();
+	const auto &selfGrids = MAP->getSelfLauncherGrids();
+	const auto &oppoGrids = MAP->getOppoLauncherGrids();
 
-	if (selfArea.containsPoint(point))
+	for (const auto &grid : selfGrids)
 	{
-		// 创建对象;
-		auto self = OBJECTS->createObject(++m_objectIdIndex, 1, (int)GameObjectGroup::Group0);
-		self->setPosition(point);
-		self->setDirection(GameObjectDirection::Up);
-		self->idle();
+		if (touch_grid == grid)
+		{
+			// 创建对象;
+			auto self = OBJECTS->createObject(++m_objectIdIndex, 1, (int)GameObjectGroup::Group0);
+			self->setPosition(point);
+			self->setDirection(GameObjectDirection::Up);
+			self->idle();
 
-		// 临时创建对方对象，在随机位置;
-		MapPoint p;
-		p.x = rand() % (int)(oppoArea.w) + (int)(oppoArea.x);
-		p.y = rand() % (int)(oppoArea.h) + (int)(oppoArea.y);
-		auto oppo = OBJECTS->createObject(++m_objectIdIndex, 1, (int)GameObjectGroup::Group1);
-		oppo->setPosition(p);
-		oppo->setDirection(GameObjectDirection::Down);
-		GAME_OBJECT_VIEW(oppo->id())->setColorMask(cocos2d::Color3B(255, 0, 0));
-		oppo->idle();
+			// 临时创建对方对象，在随机位置;
+			auto index = rand() % oppoGrids.size();
+			auto p = MAP->grid2pos(oppoGrids[index]);
+			auto oppo = OBJECTS->createObject(++m_objectIdIndex, 1, (int)GameObjectGroup::Group1);
+			oppo->setPosition(p);
+			oppo->setDirection(GameObjectDirection::Down);
+			GAME_OBJECT_VIEW(oppo->id())->setColorMask(cocos2d::Color3B(255, 0, 0));
+			oppo->idle();
+
+			break;
+		}
 	}
+
 }
 
 void GameLogic::handleLogicFrame( LogicFrame *frame )

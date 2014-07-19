@@ -53,7 +53,6 @@ bool MapView::init()
 
 	createBg();
 	createGrid();
-	createLauncherArea();
 	createTerrain();
 
 	// 注册点击事件;
@@ -127,43 +126,44 @@ void MapView::createGrid()
 	}
 }
 
-void MapView::createLauncherArea()
-{
-	const auto &selfLauncherArea = MAP->getSelfLauncherArea().toRect();
-	const auto &oppoLauncherArea = MAP->getOppoLauncherArea().toRect();
-
-	Vec2 selfVerts[RECT_POINTS], oppoVerts[RECT_POINTS];
-	DisplayHelper::getInstance()->rect2points(selfLauncherArea, selfVerts);
-	DisplayHelper::getInstance()->rect2points(oppoLauncherArea, oppoVerts);
-
-	auto draw = DrawNode::create();
-	this->addChild(draw, MapManager::LAYER_LAUNCHER_AREA);
-
-	draw->drawPolygon(selfVerts, RECT_POINTS, Color4F(0.0f, 1.0f, 0.0f, 0.2f), 1.0f, Color4F(0.0f, 1.0f, 0.0f, 0.4f));
-	draw->drawPolygon(oppoVerts, RECT_POINTS, Color4F(1.0f, 0.0f, 0.0f, 0.2f), 1.0f, Color4F(1.0f, 0.0f, 0.0f, 0.4f));
-}
-
 void MapView::createTerrain()
 {
 	auto draw = DrawNode::create();
 	this->addChild(draw, MapManager::LAYER_TERRAIN);
 
-	// draw
+	// 绘制地形;
 	Fixed x, y;
 	for (y=0; y<m_mapH; ++y)
 	{
 		for (x=0; x<m_mapW; ++x)
 		{
 			auto key = MAP->grid2key(x, y);
-			if (MAP->data(key).type != MapGrid::Type::None)
+			if (MAP->data(key).type == MapGrid::Type::Barrier)
 			{
 				auto &pos_x = x * m_gridW;
 				auto &pos_y = y * m_gridH;
 				Vec2 verts[] = { Vec2(pos_x, pos_y), Vec2(pos_x, pos_y+m_gridH), Vec2(pos_x+m_gridW, pos_y+m_gridH), Vec2(pos_x+m_gridW, pos_y) };
 				draw->drawPolygon(verts, RECT_POINTS, Color4F(1.0f, 1.0f, 1.0f, 0.8f), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
 			}
+			else if (MAP->data(key).type == MapGrid::Type::Group0)
+			{
+				auto &pos_x = x * m_gridW;
+				auto &pos_y = y * m_gridH;
+				Vec2 verts[] = { Vec2(pos_x, pos_y), Vec2(pos_x, pos_y+m_gridH), Vec2(pos_x+m_gridW, pos_y+m_gridH), Vec2(pos_x+m_gridW, pos_y) };
+				draw->drawPolygon(verts, RECT_POINTS, Color4F(0.0f, 1.0f, 0.0f, 0.2f), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 0.4f));
+			}
+			
+			else if (MAP->data(key).type == MapGrid::Type::Group1)
+			{
+				auto &pos_x = x * m_gridW;
+				auto &pos_y = y * m_gridH;
+				Vec2 verts[] = { Vec2(pos_x, pos_y), Vec2(pos_x, pos_y+m_gridH), Vec2(pos_x+m_gridW, pos_y+m_gridH), Vec2(pos_x+m_gridW, pos_y) };
+				draw->drawPolygon(verts, RECT_POINTS, Color4F(1.0f, 0.0f, 0.0f, 0.2f), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 0.4f));
+			}
 		}
 	}
+
+	// 绘制出兵点;
 }
 
 void MapView::dragMap( const cocos2d::Vec2 &vec )

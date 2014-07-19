@@ -73,12 +73,18 @@ bool MapData::init( const char *config )
 			gridData.grid.x = x;
 			gridData.grid.y = y;
 			gridData.type = (MapGrid::Type)n;	
+
+			// 出兵点;
+			if (gridData.type == MapGrid::Type::Group0)
+			{
+				m_selfLauncherGrids.push_back(gridData.grid);
+			}
+			else if (gridData.type == MapGrid::Type::Group1)
+			{
+				m_oppoLauncherGrids.push_back(gridData.grid);
+			}
 		}
 	}
-
-	// 战场区域;
-	m_selfLauncherArea = MapRect(m_gridW, Fixed(0), m_gridW*(m_mapW-Fixed(2)), m_gridH*Fixed(4));
-	m_oppoLauncherArea = MapRect(m_gridW, m_displayH-m_gridH*Fixed(4), m_gridW*(m_mapW-Fixed(2)), m_gridH*Fixed(4));
 
 	return true;
 }

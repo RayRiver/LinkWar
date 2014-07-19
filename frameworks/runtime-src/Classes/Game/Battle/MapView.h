@@ -16,8 +16,6 @@ public:
 
 	void createBg();
 	void createGrid();
-	void createLauncherArea();
-	void createBattleFieldArea();
 	void createTerrain();
 
 	void dragMap(const cocos2d::Vec2 &vec);

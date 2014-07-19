@@ -12,18 +12,20 @@ public:
 	enum class Type
 	{
 		None = 0,
-		Barrier = 1,
+		Group0 = 1,
+		Group1 = 2,
+		Barrier = 9,
 	};
 
 	Fixed x, y;
 
 	MapGrid(int _x = -1, int _y = -1);
 
-	inline bool operator==(const MapGrid &other) {
+	inline bool operator==(const MapGrid &other) const {
 		return x==other.x && y==other.y;
 	}
 
-	inline bool operator!=(const MapGrid &other) {
+	inline bool operator!=(const MapGrid &other) const {
 		return x!=other.x || y!=other.y;
 	}	
 
