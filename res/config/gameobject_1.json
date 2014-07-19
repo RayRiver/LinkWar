@@ -24,7 +24,7 @@
 	"animation_file": "animation/ani_green_link.ExportJson",
 	"animation_name" : "ani_green_link",
 	"animation_default_action": "idle_down",
-	"animation_scale": 1.5,
+	"animation_scale": 1.0,
 
 	"": ""
 }

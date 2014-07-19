@@ -109,9 +109,9 @@ bool PathFinder::findPath()
 		// 7  8  9
 		{
 			_checkChild(node->point.x+Fixed(1), node->point.y, node);		// 6
-			_checkChild(node->point.x, node->point.y-Fixed(1),	node);		// 2
+			_checkChild(node->point.x, node->point.y-Fixed(1), node);		// 2
 			_checkChild(node->point.x, node->point.y+Fixed(1), node);		// 8
-			_checkChild(node->point.x-Fixed(1), node->point.y-Fixed(1), node);	// 4
+			_checkChild(node->point.x-Fixed(1), node->point.y, node);		// 4
 		}
 
 

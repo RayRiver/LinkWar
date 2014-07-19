@@ -9,6 +9,14 @@ MapGrid::MapGrid( int _x, int _y )
 
 }
 
+cocos2d::Vec2 MapGrid::toPoint() const
+{
+	cocos2d::Vec2 vec;
+	vec.x = x;
+	vec.y = y;
+	return vec;
+}
+
 MapVec2::MapVec2( const Fixed &_x, const Fixed &_y )
 	: x(_x)
 	, y(_y)

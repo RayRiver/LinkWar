@@ -55,6 +55,9 @@ bool MapManager::loadData(const char *config)
 	m_view = MapView::create();
 	this->addChild(m_view);
 
+	// ¼ÓÈëtiledµØÍ¼;
+	m_view->addChild(m_data->m_tiledMap);
+
 	return true;
 }
 

@@ -14,6 +14,9 @@ public:
 		None = 0,
 		Group0 = 1,
 		Group1 = 2,
+
+		Mud = 7,
+		Ice = 8,
 		Barrier = 9,
 	};
 
@@ -33,6 +36,8 @@ public:
 		x = other.x;
 		y = other.y;
 	}
+
+	cocos2d::Vec2 toPoint() const;
 };
 
 // 地图格子数据;

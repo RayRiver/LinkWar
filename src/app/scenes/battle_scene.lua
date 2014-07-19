@@ -10,7 +10,7 @@ function SceneClass:ctor()
     self:addChild(mapManager)
         
     -- 加载地图数据
-    local ret = mapManager:loadData("config/map1.json")
+    local ret = mapManager:loadData("map/map1.tmx")
     
     -- 对象管理器
     local objectManager = GameObjectManager:getInstance()

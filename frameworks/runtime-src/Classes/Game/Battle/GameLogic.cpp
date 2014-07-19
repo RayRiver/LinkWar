@@ -237,6 +237,17 @@ void GameLogic::moveObject( GameObject *object )
 		if (pt.x*pt.x + pt.y*pt.y > moveSpeed*moveSpeed)
 		{
 			pt.normalize();
+
+			// 特殊地形速度变化;
+			if (MAP->getGridType(current_grid.x, current_grid.y) == MapGrid::Type::Mud)
+			{
+				moveSpeed *= Fixed(0.5);
+			}
+			else if (MAP->getGridType(current_grid.x, current_grid.y) == MapGrid::Type::Ice)
+			{
+				moveSpeed *= Fixed(2);
+			}
+
 			pt.x *= moveSpeed;
 			pt.y *= moveSpeed;
 		}
