@@ -197,7 +197,3 @@ const MapRect & MapManager::getOppoLauncherArea()
 	return m_data->m_oppoLauncherArea;
 }
 
-const MapRect & MapManager::getBattleFieldArea()
-{
-	return m_data->m_battleFieldArea;
-}

@@ -124,9 +124,6 @@
     <ClInclude Include="..\Classes\Game\Battle\CON_HP0.h">
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Game\Battle\CON_ReachedBattleField.h">
-      <Filter>Game\Battle\Object\Behavior</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\NOD_Attack.h">
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
@@ -137,9 +134,6 @@
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\NOD_MoveToAttack.h">
-      <Filter>Game\Battle\Object\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Game\Battle\NOD_MoveToBattleField.h">
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\BlackBoard.h">
@@ -309,9 +303,6 @@
     <ClCompile Include="..\Classes\Game\Battle\CON_HP0.cpp">
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Game\Battle\CON_ReachedBattleField.cpp">
-      <Filter>Game\Battle\Object\Behavior</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\NOD_Attack.cpp">
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
@@ -322,9 +313,6 @@
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\NOD_MoveToAttack.cpp">
-      <Filter>Game\Battle\Object\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Battle\NOD_MoveToBattleField.cpp">
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\BlackBoard.cpp">

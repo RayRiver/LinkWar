@@ -20,6 +20,8 @@ public:
 	void createBattleFieldArea();
 	void createTerrain();
 
+	void dragMap(const cocos2d::Vec2 &vec);
+
 private:
 	Fixed m_mapW, m_mapH;
 	Fixed m_gridW, m_gridH;

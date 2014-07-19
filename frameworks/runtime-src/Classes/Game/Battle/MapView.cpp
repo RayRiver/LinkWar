@@ -8,7 +8,7 @@
 USING_NS_CC;
 
 const int RECT_POINTS = 4;
-const float DRAG_MIN_DISTANCE2 = 20.0f;
+const float DRAG_MIN_DISTANCE2 = 100.0f;
 
 MapView * MapView::create()
 {
@@ -54,7 +54,6 @@ bool MapView::init()
 	createBg();
 	createGrid();
 	createLauncherArea();
-	createBattleFieldArea();
 	createTerrain();
 
 	// ×¢²áµã»÷ÊÂ¼þ;
@@ -108,7 +107,7 @@ bool MapView::init()
 
 void MapView::createBg()
 {
-	auto layer = LayerColor::create(Color4B(50, 50, 50, 255));
+	auto layer = LayerColor::create(Color4B(255, 255, 255, 75), m_gridW*m_mapW, m_gridH*m_mapH);
 	this->addChild(layer, MapManager::LAYER_BG);
 }
 
@@ -117,19 +116,14 @@ void MapView::createGrid()
 	auto grid = DrawNode::create();
 	this->addChild(grid, MapManager::LAYER_GRID);
 
-	auto top = DisplayHelper::getInstance()->top();
-	auto bottom = DisplayHelper::getInstance()->bottom();
-	auto left = DisplayHelper::getInstance()->left();
-	auto right = DisplayHelper::getInstance()->right();
-
 	Fixed i;
-	for (i=0; i<m_mapW; ++i)
+	for (i=0; i<=m_mapW; ++i)
 	{
-		grid->drawSegment(Vec2(i*m_gridW, top), Vec2(i*m_gridW, bottom), 0.5f, Color4F(0.5f, 0.5f, 0.5f, 0.5f));
+		grid->drawSegment(Vec2(i*m_gridW, 0), Vec2(i*m_gridW, m_mapH*m_gridH), 0.5f, Color4F(0.5f, 0.5f, 0.5f, 0.5f));
 	}
-	for (i=0; i<m_mapH; ++i)
+	for (i=0; i<=m_mapH; ++i)
 	{
-		grid->drawSegment(Vec2(left, i*m_gridH), Vec2(right, i*m_gridH), 0.5f, Color4F(0.5f, 0.5f, 0.5f, 0.5f));
+		grid->drawSegment(Vec2(0, i*m_gridH), Vec2(m_mapW*m_gridW, i*m_gridH), 0.5f, Color4F(0.5f, 0.5f, 0.5f, 0.5f));
 	}
 }
 
@@ -147,18 +141,6 @@ void MapView::createLauncherArea()
 
 	draw->drawPolygon(selfVerts, RECT_POINTS, Color4F(0.0f, 1.0f, 0.0f, 0.2f), 1.0f, Color4F(0.0f, 1.0f, 0.0f, 0.4f));
 	draw->drawPolygon(oppoVerts, RECT_POINTS, Color4F(1.0f, 0.0f, 0.0f, 0.2f), 1.0f, Color4F(1.0f, 0.0f, 0.0f, 0.4f));
-}
-
-void MapView::createBattleFieldArea()
-{
-	const auto &battleFieldArea = MAP->getBattleFieldArea().toRect();;
-
-	auto draw = DrawNode::create();
-	this->addChild(draw, MapManager::LAYER_BATTLE_FIELD_AREA);
-
-	Vec2 verts[RECT_POINTS];
-	DisplayHelper::getInstance()->rect2points(battleFieldArea, verts);
-	draw->drawPolygon(verts, RECT_POINTS, Color4F(1.0f, 1.0f, 1.0f, 0.2f), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 0.4f));
 }
 
 void MapView::createTerrain()
@@ -182,5 +164,32 @@ void MapView::createTerrain()
 			}
 		}
 	}
+}
+
+void MapView::dragMap( const cocos2d::Vec2 &vec )
+{
+	auto pos = getPosition() + vec;
+	auto min_x = float(m_displayW-m_gridW*m_mapW);
+	auto min_y = float(m_displayH-m_gridH*m_mapH);
+
+	if (pos.x > 0)
+	{
+		pos.x = 0;
+	}
+	else if (pos.x < min_x)
+	{
+		pos.x = min_x;
+	}
+
+	if (pos.y > 0)
+	{
+		pos.y = 0;
+	}
+	else if (pos.y < min_y)
+	{
+		pos.y = min_y;
+	}
+
+	setPosition(pos);
 }
 

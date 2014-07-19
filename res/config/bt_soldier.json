@@ -13,19 +13,7 @@
 			},
 			"precondition_desc": "前提：hp为0"
 		},
-		{
-			"class": "BTNodeAction",
-			"imp": "NOD_MoveToBattleField",
-			"desc": "行为：移动到战场",
-			"precondition": {
-				"class": "BTPreconditionNOT",
-				"lhs": {
-					"class": "BTPrecondition",
-					"imp": "CON_ReachedBattleField"
-				}
-			},
-			"precondition_desc": "前提：尚未移动到战场"
-		},
+
 		{
 			"class": "BTNodeAction",
 			"imp": "NOD_Attack",

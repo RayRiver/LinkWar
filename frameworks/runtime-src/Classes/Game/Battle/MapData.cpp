@@ -27,6 +27,10 @@ MapData::~MapData()
 
 bool MapData::init( const char *config )
 {
+	// 固定大小，地图可移动;
+	m_gridW = 40;
+	m_gridH = 40;
+
 	m_displayW = DisplayHelper::getInstance()->width();
 	m_displayH = DisplayHelper::getInstance()->height();
 
@@ -47,8 +51,6 @@ bool MapData::init( const char *config )
 	auto h = DICTOOL->getIntValue_json(dict, "h", 1);
 	m_mapW = w;
 	m_mapH = h;
-	m_gridW = m_displayW / m_mapW;
-	m_gridH = m_displayH / m_mapH;
 
 	// 创建地图数据;
 	auto grids = (int)m_mapW * (int)m_mapH;
@@ -77,7 +79,6 @@ bool MapData::init( const char *config )
 	// 战场区域;
 	m_selfLauncherArea = MapRect(m_gridW, Fixed(0), m_gridW*(m_mapW-Fixed(2)), m_gridH*Fixed(4));
 	m_oppoLauncherArea = MapRect(m_gridW, m_displayH-m_gridH*Fixed(4), m_gridW*(m_mapW-Fixed(2)), m_gridH*Fixed(4));
-	m_battleFieldArea = MapRect(m_gridW, m_gridH*Fixed(4), m_gridW*(m_mapW-Fixed(2)), m_gridH*(m_mapH-Fixed(8)));
 
 	return true;
 }

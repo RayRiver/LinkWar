@@ -218,12 +218,10 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Game\Battle\CON_EnemyCanAttack.h" />
     <ClInclude Include="..\Classes\Game\Battle\CON_FoundEnemy.h" />
     <ClInclude Include="..\Classes\Game\Battle\CON_HP0.h" />
-    <ClInclude Include="..\Classes\Game\Battle\CON_ReachedBattleField.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_Attack.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_Die.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_Idle.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_MoveToAttack.h" />
-    <ClInclude Include="..\Classes\Game\Battle\NOD_MoveToBattleField.h" />
     <ClInclude Include="..\Classes\Game\Battle\UserData.h" />
     <ClInclude Include="..\Classes\Game\BehaviorTree\BehaviorTree.h" />
     <ClInclude Include="..\Classes\Game\BehaviorTree\BTDebugNode.h" />
@@ -277,12 +275,10 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\Game\Battle\CON_EnemyCanAttack.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\CON_FoundEnemy.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\CON_HP0.cpp" />
-    <ClCompile Include="..\Classes\Game\Battle\CON_ReachedBattleField.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_Attack.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_Die.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_Idle.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_MoveToAttack.cpp" />
-    <ClCompile Include="..\Classes\Game\Battle\NOD_MoveToBattleField.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\UserData.cpp" />
     <ClCompile Include="..\Classes\Game\BehaviorTree\BTDebugNode.cpp" />
     <ClCompile Include="..\Classes\Game\BehaviorTree\BTDebugRenderer.cpp" />

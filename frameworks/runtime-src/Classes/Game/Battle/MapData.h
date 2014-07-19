@@ -25,7 +25,7 @@ private:
 	Fixed m_gridW, m_gridH;
 	Fixed m_displayW, m_displayH;
 
-	MapRect m_selfLauncherArea, m_oppoLauncherArea, m_battleFieldArea;
+	MapRect m_selfLauncherArea, m_oppoLauncherArea;
 
 };
 

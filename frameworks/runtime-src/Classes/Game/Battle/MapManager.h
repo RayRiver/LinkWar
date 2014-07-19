@@ -55,7 +55,6 @@ public:
 
 	const MapRect &getSelfLauncherArea();
 	const MapRect &getOppoLauncherArea();
-	const MapRect &getBattleFieldArea();
 
 	// 地图格子引用;
 	void retainGrid(const Fixed &x, const Fixed &y);

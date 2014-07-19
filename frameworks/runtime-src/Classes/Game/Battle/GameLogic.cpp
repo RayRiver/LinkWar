@@ -37,8 +37,7 @@ GameLogic::~GameLogic()
 void GameLogic::handleDragMap( const Vec2 &vec )
 {
 	// 处理移动地图事件;
-	const auto &pos = MAP->getView()->getPosition();
-	MAP->getView()->setPosition(pos + vec);
+	MAP->getView()->dragMap(vec);
 
 }
 
