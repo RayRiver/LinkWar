@@ -2408,7 +2408,7 @@
    <tile gid="1189"/>
   </data>
  </layer>
- <layer name="mask_layer" width="60" height="40" visible="0">
+ <layer name="mask_layer" width="60" height="40">
   <data>
    <tile gid="9"/>
    <tile gid="9"/>
