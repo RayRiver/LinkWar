@@ -129,7 +129,7 @@ void MapView::createGrid()
 void MapView::createTerrain()
 {
 	auto draw = DrawNode::create();
-	this->addChild(draw, MapManager::LAYER_TERRAIN);
+	this->addChild(draw, MapManager::LAYER_LAUNCHER_AREA);
 
 	// ªÊ÷∆µÿ–Œ;
 	Fixed x, y;
@@ -138,6 +138,7 @@ void MapView::createTerrain()
 		for (x=0; x<m_mapW; ++x)
 		{
 			auto key = MAP->grid2key(x, y);
+			/*
 			if (MAP->data(key).type == MapGrid::Type::Barrier)
 			{
 				auto &pos_x = x * m_gridW;
@@ -145,7 +146,8 @@ void MapView::createTerrain()
 				Vec2 verts[] = { Vec2(pos_x, pos_y), Vec2(pos_x, pos_y+m_gridH), Vec2(pos_x+m_gridW, pos_y+m_gridH), Vec2(pos_x+m_gridW, pos_y) };
 				draw->drawPolygon(verts, RECT_POINTS, Color4F(1.0f, 1.0f, 1.0f, 0.8f), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
 			}
-			else if (MAP->data(key).type == MapGrid::Type::Group0)
+			*/
+			if (MAP->data(key).type == MapGrid::Type::Group0)
 			{
 				auto &pos_x = x * m_gridW;
 				auto &pos_y = y * m_gridH;

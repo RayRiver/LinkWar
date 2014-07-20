@@ -56,7 +56,7 @@ bool MapManager::loadData(const char *config)
 	this->addChild(m_view);
 
 	// ¼ÓÈëtiledµØÍ¼;
-	m_view->addChild(m_data->m_tiledMap);
+	m_view->addChild(m_data->m_tiledMap, LAYER_TERRAIN);
 
 	return true;
 }

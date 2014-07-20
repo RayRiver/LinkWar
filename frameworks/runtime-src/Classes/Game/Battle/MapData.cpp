@@ -35,6 +35,7 @@ bool MapData::init( const char *config )
 	m_tiledMap = TMXTiledMap::create(config);
 	m_maskLayer = m_tiledMap->getLayer("mask_layer");
 	auto tileset = m_maskLayer->getTileSet();
+	m_maskLayer->setVisible(false);
 
 	// ½âÎöµØÍ¼¿í¸ß;
 	const auto &size = m_tiledMap->getMapSize();

@@ -5302,9 +5302,9 @@ static int lua_cocos2dx_GLProgramState_setVertexAttribPointer(lua_State* tolua_S
     cocos2d::GLProgramState* cobj = nullptr;
     bool ok  = true;
     
-#if COCOS2D_DEBUG >= 1
+//#if COCOS2D_DEBUG >= 1
     tolua_Error tolua_err;
-#endif
+//#endif
     
     
 #if COCOS2D_DEBUG >= 1
