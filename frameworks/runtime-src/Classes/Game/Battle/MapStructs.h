@@ -12,12 +12,17 @@ public:
 	enum class Type
 	{
 		None = 0,
-		Group0 = 1,
-		Group1 = 2,
 
 		Mud = 7,
 		Ice = 8,
 		Barrier = 9,
+	};
+
+	enum class Group
+	{
+		None = 0,
+		Group0 = 1,
+		Group1 = 2,
 	};
 
 	Fixed x, y;
@@ -46,6 +51,7 @@ class MapGridData
 public:
 	MapGrid grid;
 	MapGrid::Type type;	
+	MapGrid::Group group;
 	int refCount;
 
 	MapGridData() : type(MapGrid::Type::None), refCount(0) {} 

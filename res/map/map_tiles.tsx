@@ -3,12 +3,12 @@
  <image source="map_tiles.png" trans="b0e0f8" width="256" height="128"/>
  <tile id="0">
   <properties>
-   <property name="type" value="1"/>
+   <property name="group" value="1"/>
   </properties>
  </tile>
  <tile id="1">
   <properties>
-   <property name="type" value="2"/>
+   <property name="group" value="2"/>
   </properties>
  </tile>
  <tile id="8">
@@ -24,6 +24,11 @@
  <tile id="10">
   <properties>
    <property name="type" value="7"/>
+  </properties>
+ </tile>
+ <tile id="16">
+  <properties>
+   <property name="type" value="9"/>
   </properties>
  </tile>
 </tileset>

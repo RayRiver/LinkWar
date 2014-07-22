@@ -147,7 +147,7 @@ void MapView::createTerrain()
 				draw->drawPolygon(verts, RECT_POINTS, Color4F(1.0f, 1.0f, 1.0f, 0.8f), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 			*/
-			if (MAP->data(key).type == MapGrid::Type::Group0)
+			if (MAP->data(key).group == MapGrid::Group::Group0)
 			{
 				auto &pos_x = x * m_gridW;
 				auto &pos_y = y * m_gridH;
@@ -155,7 +155,7 @@ void MapView::createTerrain()
 				draw->drawPolygon(verts, RECT_POINTS, Color4F(0.0f, 1.0f, 0.0f, 0.2f), 1.0f, Color4F(1.0f, 1.0f, 1.0f, 0.4f));
 			}
 			
-			else if (MAP->data(key).type == MapGrid::Type::Group1)
+			else if (MAP->data(key).group == MapGrid::Group::Group1)
 			{
 				auto &pos_x = x * m_gridW;
 				auto &pos_y = y * m_gridH;

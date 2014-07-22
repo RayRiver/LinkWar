@@ -13,7 +13,6 @@ using namespace cocostudio;
 MapData::MapData()
 	: m_mapData(nullptr)
 	, m_tiledMap(nullptr)
-	, m_maskLayer(nullptr)
 {
 	
 }
@@ -33,9 +32,12 @@ bool MapData::init( const char *config )
 	m_displayH = DisplayHelper::getInstance()->height();
 
 	m_tiledMap = TMXTiledMap::create(config);
-	m_maskLayer = m_tiledMap->getLayer("mask_layer");
-	auto tileset = m_maskLayer->getTileSet();
-	m_maskLayer->setVisible(false);
+	auto collisionLayer = m_tiledMap->getLayer("Collision");
+	auto maskLayer = m_tiledMap->getLayer("Mask");
+	collisionLayer->setVisible(false);
+	maskLayer->setVisible(false);
+
+	auto tileset = maskLayer->getTileSet();
 
 	// 解析地图宽高;
 	const auto &size = m_tiledMap->getMapSize();
@@ -67,8 +69,8 @@ bool MapData::init( const char *config )
 			gridData.grid.x = x;
 			gridData.grid.y = y;
 
-			auto gid = grid2gid(x, y);
-
+			// 地形信息;
+			auto gid = grid2gid(collisionLayer, x, y);
 			auto properties = m_tiledMap->getPropertiesForGID(gid);
 			if (properties.getType() == Value::Type::MAP)
 			{
@@ -90,11 +92,34 @@ bool MapData::init( const char *config )
 			}
 
 			// 出兵点;
-			if (gridData.type == MapGrid::Type::Group0)
+			auto mask_gid = grid2gid(maskLayer, x, y);
+			auto mask_properties = m_tiledMap->getPropertiesForGID(mask_gid);
+			if (mask_properties.getType() == Value::Type::MAP)
+			{
+				auto dict = mask_properties.asValueMap();
+				auto it = dict.find("group");
+				if (it == dict.end())
+				{
+					gridData.group = MapGrid::Group::None;
+				}
+				else
+				{
+					auto group = it->second.asInt();
+					gridData.group = (MapGrid::Group)group;
+				}
+			}
+			else
+			{
+				gridData.group = MapGrid::Group::None;
+			}
+
+
+			// 出兵点列表;
+			if (gridData.group == MapGrid::Group::Group0)
 			{
 				m_selfLauncherGrids.push_back(gridData.grid);
 			}
-			else if (gridData.type == MapGrid::Type::Group1)
+			else if (gridData.group == MapGrid::Group::Group1)
 			{
 				m_oppoLauncherGrids.push_back(gridData.grid);
 			}
@@ -104,18 +129,18 @@ bool MapData::init( const char *config )
 	return true;
 }
 
-unsigned int MapData::grid2gid( const MapGrid &grid )
+unsigned int MapData::grid2gid( cocos2d::TMXLayer *layer, const MapGrid &grid )
 {
 	auto tiled_grid = grid;
 	tiled_grid.y = m_mapH - Fixed::ONE - tiled_grid.y;
-	return m_maskLayer->getTileGIDAt(tiled_grid.toPoint());
+	return layer->getTileGIDAt(tiled_grid.toPoint());
 }
 
-unsigned int MapData::grid2gid( const Fixed &x, const Fixed &y )
+unsigned int MapData::grid2gid( cocos2d::TMXLayer *layer, const Fixed &x, const Fixed &y )
 {
 	auto tiled_grid = MapGrid(x, y);
 	tiled_grid.y = m_mapH - Fixed::ONE - tiled_grid.y;
-	return m_maskLayer->getTileGIDAt(tiled_grid.toPoint());
+	return layer->getTileGIDAt(tiled_grid.toPoint());
 }
 
 /*

@@ -19,8 +19,8 @@ public:
 private:
 	bool init(const char *config);
 
-	unsigned int grid2gid(const Fixed &x, const Fixed &y);
-	unsigned int grid2gid(const MapGrid &grid);
+	unsigned int grid2gid(cocos2d::TMXLayer *layer, const Fixed &x, const Fixed &y);
+	unsigned int grid2gid(cocos2d::TMXLayer *layer, const MapGrid &grid);
 
 private:
 	MapGridData *m_mapData;
@@ -29,7 +29,6 @@ private:
 	Fixed m_displayW, m_displayH;
 
 	cocos2d::TMXTiledMap *m_tiledMap;
-	cocos2d::TMXLayer *m_maskLayer;
 
 	std::vector<MapGrid> m_selfLauncherGrids;
 	std::vector<MapGrid> m_oppoLauncherGrids;
