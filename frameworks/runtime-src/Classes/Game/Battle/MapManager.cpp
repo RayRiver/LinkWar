@@ -58,6 +58,21 @@ bool MapManager::loadData(const char *config)
 	// 加入tiled地图;
 	m_view->addChild(m_data->m_tiledMap, LAYER_TERRAIN);
 
+	// 注册键盘事件;
+	auto listener = EventListenerKeyboard::create();
+	listener->onKeyPressed = [=](EventKeyboard::KeyCode keycode, Event *event) {
+		if (keycode == EventKeyboard::KeyCode::KEY_F12)
+		{
+			auto layer = m_data->m_tiledMap->getLayer("Collision");
+			if (layer)
+			{
+				auto isvisible = layer->isVisible();
+				layer->setVisible(!isvisible);
+			}
+		}
+	};
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+
 	return true;
 }
 
