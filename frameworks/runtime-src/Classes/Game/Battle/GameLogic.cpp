@@ -98,11 +98,13 @@ void GameLogic::handleLogicFrame( LogicFrame *frame )
 				// 对象逻辑处理;
 				object->onLogic();
 
+				/*
 				// 对象移动;
 				if (object->desireMove())
 				{
 					this->moveObject(object);
 				}
+				*/
 			}
 		}
 
@@ -147,6 +149,7 @@ void GameLogic::handleLogicFrame( LogicFrame *frame )
 
 void GameLogic::moveObject( GameObject *object )
 {
+	/*
 	auto mapManager = MapManager::getInstance();
 	auto objectManager = GameObjectManager::getInstance();
 	auto view = GAME_OBJECT_VIEW(object->id());
@@ -297,4 +300,5 @@ void GameLogic::moveObject( GameObject *object )
 			mapManager->retainGrid(current_grid2.x, current_grid2.y);
 		}
 	}
+	*/
 }

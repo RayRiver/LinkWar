@@ -20,7 +20,6 @@ GameObject::GameObject()
 	, m_id(-1)
 	, m_group(-1)
 	, m_state(GameObjectState::Idle)
-	, m_desireMove(false)
 	, m_direction(GameObjectDirection::Down)
 	, m_showHitBox(false)
 	, m_behavior(nullptr)
@@ -29,6 +28,7 @@ GameObject::GameObject()
 	, m_attackTarget(nullptr)
 	, m_attackInterval(30)
 	, m_currentAttackInterval(m_attackInterval)
+	, m_hasFrameMoveTarget(false)
 {
 
 }
@@ -82,7 +82,6 @@ bool GameObject::initData( const char *config )
 	m_maxhp = Fixed(DICTOOL->getFloatValue_json(dict, "maxhp", 1.0f));
 	m_atk = Fixed(DICTOOL->getFloatValue_json(dict, "atk", 0.0f));
 	m_hp = m_maxhp;
-	m_moveSpeed = DICTOOL->getFloatValue_json(dict, "move_speed", 0.0f);
 
 	// 解析对象行为树;
 	const char *behavior_config = DICTOOL->getStringValue_json(dict, "behavior", nullptr);
@@ -93,6 +92,9 @@ bool GameObject::initData( const char *config )
 
 	// 解析行为树更新间隔帧;
 	m_behaviorIntervalFrames = DICTOOL->getFloatValue_json(dict, "behavior_interval_frames", m_behaviorIntervalFrames);
+
+	// 速度为每帧的距离;
+	m_moveSpeed = DICTOOL->getFloatValue_json(dict, "move_speed", 0.0f);
 
 	// 解析对象受击盒;
 	auto hitboxExist = DICTOOL->checkObjectExist_json(dict, "hitbox");
@@ -284,6 +286,7 @@ void GameObject::onLogic()
 		}
 	}
 
+	/*
 	// 初始化 是否想要移动;
 	m_desireMove = false;
 
@@ -303,7 +306,9 @@ void GameObject::onLogic()
 			m_desireMove = true;
 		}
 	}
-	else if (state == GameObjectState::Attack)
+	else 
+	*/
+	if (m_state == GameObjectState::Attack)
 	{
 		--m_currentAttackInterval;
 
@@ -316,6 +321,97 @@ void GameObject::onLogic()
 				target->hit(this);
 			}
 			m_currentAttackInterval = m_attackInterval;
+		}
+	}
+	else if (m_state == GameObjectState::MoveToAttack)
+	{
+		if (this->hasFrameMoveTarget())
+		{
+			auto mapManager = MapManager::getInstance();
+			auto objectManager = GameObjectManager::getInstance();
+			auto view = GAME_OBJECT_VIEW(this->id());
+
+			auto pos = this->getPosition();
+			auto target = this->getFrameMoveTarget();
+			auto &current_grid = mapManager->pos2grid(pos);
+			auto target_grid = mapManager->pos2grid(target);
+			auto &pathFinder = this->getPathFinder();
+			auto moveSpeed = this->getMoveSpeed();
+
+			// 移动到目标位置;
+			if (target != pos)
+			{
+				auto pt = target - pos;
+				if (pt.x*pt.x + pt.y*pt.y > moveSpeed*moveSpeed)
+				{
+					pt.normalize();
+
+					// 特殊地形速度变化;
+					if (MAP->getGridType(current_grid.x, current_grid.y) == MapGrid::Type::Mud)
+					{
+						moveSpeed *= Fixed(0.5);
+					}
+					else if (MAP->getGridType(current_grid.x, current_grid.y) == MapGrid::Type::Ice)
+					{
+						moveSpeed *= Fixed(2);
+					}
+
+					pt.x *= moveSpeed;
+					pt.y *= moveSpeed;
+				}
+
+				// 设置朝向;
+				auto direction = this->getDirection();
+				if (pt.x.abs() > pt.y.abs())
+				{
+					if (pt.x > Fixed::ZERO)
+					{
+						this->setDirection(GameObjectDirection::Right);
+					}
+					else
+					{
+						this->setDirection(GameObjectDirection::Left);
+					}
+				}
+				else
+				{
+					if (pt.y > Fixed::ZERO)
+					{
+						this->setDirection(GameObjectDirection::Up);
+					}
+					else
+					{
+						this->setDirection(GameObjectDirection::Down);
+					}
+				}
+
+				// 朝向改变;
+				if (direction != this->getDirection())
+				{
+					// 播放动画;
+					view->onMove();
+				}
+
+				// 更新位置;
+				pt.x += pos.x;
+				pt.y += pos.y;
+				this->setPosition(pt);
+
+				// 更新map;
+				auto current_grid2 = mapManager->pos2grid(pt);
+				if (current_grid != current_grid2)
+				{
+					mapManager->releaseGrid(current_grid.x, current_grid.y);
+					mapManager->retainGrid(current_grid2.x, current_grid2.y);
+				}
+
+				if (pt == target)
+				{
+					// 到达目标地点; 
+					this->setHasFrameMoveTarget(false);
+				}
+
+			}
 		}
 	}
 }

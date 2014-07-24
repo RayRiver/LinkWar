@@ -118,9 +118,6 @@
     <ClInclude Include="..\Classes\Game\Battle\CON_EnemyCanAttack.h">
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Game\Battle\CON_FoundEnemy.h">
-      <Filter>Game\Battle\Object\Behavior</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Game\Battle\CON_HP0.h">
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClInclude>
@@ -223,6 +220,15 @@
     <ClInclude Include="..\Classes\Game\Battle\ObjectComponent.h">
       <Filter>Game\Battle\Object</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\CON_FoundPath.h">
+      <Filter>Game\Battle\Object\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\CON_LockedOnEnemy.h">
+      <Filter>Game\Battle\Object\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Game\Battle\NOD_FindPath.h">
+      <Filter>Game\Battle\Object\Behavior</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
@@ -295,9 +301,6 @@
       <Filter>Game\Helper</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\CON_EnemyCanAttack.cpp">
-      <Filter>Game\Battle\Object\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Game\Battle\CON_FoundEnemy.cpp">
       <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\CON_HP0.cpp">
@@ -383,6 +386,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\Game\Battle\ObjectComponent.cpp">
       <Filter>Game\Battle\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\CON_FoundPath.cpp">
+      <Filter>Game\Battle\Object\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\CON_LockedOnEnemy.cpp">
+      <Filter>Game\Battle\Object\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Game\Battle\NOD_FindPath.cpp">
+      <Filter>Game\Battle\Object\Behavior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

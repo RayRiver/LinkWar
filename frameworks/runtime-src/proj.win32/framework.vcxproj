@@ -201,6 +201,9 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Game\Base\Sys.h" />
     <ClInclude Include="..\Classes\Game\Base\ThreadManager.h" />
     <ClInclude Include="..\Classes\Game\Base\ThreadObj.h" />
+    <ClInclude Include="..\Classes\Game\Battle\CON_FoundPath.h" />
+    <ClInclude Include="..\Classes\Game\Battle\CON_LockedOnEnemy.h" />
+    <ClInclude Include="..\Classes\Game\Battle\NOD_FindPath.h" />
     <ClInclude Include="..\Classes\Game\Battle\ObjectComponent.h" />
     <ClInclude Include="..\Classes\Game\Battle\GameLogic.h" />
     <ClInclude Include="..\Classes\Game\Battle\GameObject.h" />
@@ -216,7 +219,6 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Game\Battle\PathFinder.h" />
     <ClInclude Include="..\Classes\Game\Battle\BlackBoard.h" />
     <ClInclude Include="..\Classes\Game\Battle\CON_EnemyCanAttack.h" />
-    <ClInclude Include="..\Classes\Game\Battle\CON_FoundEnemy.h" />
     <ClInclude Include="..\Classes\Game\Battle\CON_HP0.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_Attack.h" />
     <ClInclude Include="..\Classes\Game\Battle\NOD_Die.h" />
@@ -260,6 +262,9 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\Game\Base\Sys.cpp" />
     <ClCompile Include="..\Classes\Game\Base\ThreadManager.cpp" />
     <ClCompile Include="..\Classes\Game\Base\ThreadObj.cpp" />
+    <ClCompile Include="..\Classes\Game\Battle\CON_FoundPath.cpp" />
+    <ClCompile Include="..\Classes\Game\Battle\CON_LockedOnEnemy.cpp" />
+    <ClCompile Include="..\Classes\Game\Battle\NOD_FindPath.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\ObjectComponent.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\GameLogic.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\GameObject.cpp" />
@@ -273,7 +278,6 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\Game\Battle\PathFinder.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\BlackBoard.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\CON_EnemyCanAttack.cpp" />
-    <ClCompile Include="..\Classes\Game\Battle\CON_FoundEnemy.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\CON_HP0.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_Attack.cpp" />
     <ClCompile Include="..\Classes\Game\Battle\NOD_Die.cpp" />

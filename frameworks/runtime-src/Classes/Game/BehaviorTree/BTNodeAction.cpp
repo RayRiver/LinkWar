@@ -111,9 +111,9 @@ BTRunningStatus BTNodeAction::onUpdate( const BTInputParam &input, BTOutputParam
 
 void BTNodeAction::doEnter( const BTInputParam &input )
 {
+	cocos2d::log("%s onEnter", this->m_name.c_str());
 	if (BTDebugRenderer::getInstance())
 	{
-		cocos2d::log("%s onEnter", this->m_name.c_str());
 		BTDebugRenderer::getInstance()->renderNode(this, BTNodeEvent::enter);
 	}
 
@@ -122,9 +122,9 @@ void BTNodeAction::doEnter( const BTInputParam &input )
 
 void BTNodeAction::doExit( const BTInputParam &input, BTRunningStatus state )
 {
+	cocos2d::log("%s onExit", this->m_name.c_str());
 	if (BTDebugRenderer::getInstance())
 	{
-		cocos2d::log("%s onExit", this->m_name.c_str());
 		BTDebugRenderer::getInstance()->renderNode(this, BTNodeEvent::exit);
 	}
 

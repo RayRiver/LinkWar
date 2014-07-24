@@ -2,18 +2,14 @@
 
 #include "BlackBoard.h"
 #include "GameObject.h"
+#include "GameObjectView.h"
+#include "GameObjectManager.h"
 
 void NOD_MoveToAttack::onEnter( const BTInputParam &input )
 {
 	const BlackBoard &inputData = input.getRealData<BlackBoard>();
 
-	auto self = inputData.self;
 
-	auto target = self->getAttackTarget();
-	if (target)
-	{
-		self->moveToAttack();
-	}
 
 }
 
@@ -27,8 +23,11 @@ BTRunningStatus NOD_MoveToAttack::onExecute( const BTInputParam& input, BTOutput
 	const BlackBoard &inputData = input.getRealData<BlackBoard>();
 	BlackBoard &outputData = output.getRealData<BlackBoard>();
 
-	auto self = inputData.self;
-	if (self->getAttackTarget())
+	auto object = inputData.self;
+
+	return BTRunningStatus::Executing;
+
+	if (object->hasFrameMoveTarget())
 	{
 		return BTRunningStatus::Executing;
 	}
@@ -36,6 +35,7 @@ BTRunningStatus NOD_MoveToAttack::onExecute( const BTInputParam& input, BTOutput
 	{
 		return BTRunningStatus::Finish;
 	}
+
 }
 
 BT_REGISTER_ACTION_NODE(NOD_MoveToAttack);

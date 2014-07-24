@@ -1,4 +1,4 @@
-#include "CON_FoundEnemy.h"
+#include "CON_LockedOnEnemy.h"
 
 #include "Helper/Display.h"
 
@@ -8,7 +8,7 @@
 #include "GameObjectManager.h"
 #include "MapManager.h"
 
-bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
+bool CON_LockedOnEnemy::onEvaluate(const BTInputParam& input) const
 {
 	const BlackBoard& inputData	= input.getRealData<BlackBoard>();
 
@@ -25,6 +25,12 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 		}
 	}
 	*/
+	
+	// 已有攻击对象;
+	if (self->getAttackTarget())
+	{
+		return true;
+	}
 
 	auto pos = self->getPosition();
 	Fixed distance2 = Fixed::ZERO;
@@ -47,6 +53,7 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 	if (foundObject)
 	{
 		self->setAttackTarget(foundObject);
+		self->moveToAttack();
 		return true;
 	}
 	else
@@ -55,4 +62,4 @@ bool CON_FoundEnemy::onEvaluate(const BTInputParam& input) const
 	}
 }
 
-BT_REGISTER_PRECONDITION(CON_FoundEnemy)
+BT_REGISTER_PRECONDITION(CON_LockedOnEnemy)

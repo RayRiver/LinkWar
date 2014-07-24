@@ -99,18 +99,6 @@ public:
 	void setPositionX(const Fixed &x);
 	void setPositionY(const Fixed &y);
 
-	// 想要移动到的位置信息;
-	inline bool desireMove() const { return m_desireMove; }
-
-	inline const MapPoint &getDesiredPosition() const { return m_desiredPosition; }
-	inline const Fixed &getDesiredPositionX() const { return m_desiredPosition.x; }
-	inline const Fixed &getDesiredPositionY() const { return m_desiredPosition.y; }
-
-	inline void setDesiredPosition(const MapPoint &point) { m_desiredPosition = point; }
-	inline void setDesiredPosition(const Fixed &x, const Fixed &y) { m_desiredPosition.x = x; m_desiredPosition.y = y; }
-	inline void setDesiredPositionX(const Fixed &x) { m_desiredPosition.x = x; }
-	inline void setDesiredPositionY(const Fixed &y) { m_desiredPosition.x = y; }
-
 	// 对象朝向;
 	inline GameObjectDirection getDirection() { return m_direction; }
 	inline void setDirection(GameObjectDirection direction) { m_direction = direction; }
@@ -149,6 +137,12 @@ public:
 	inline const char *getAnimationDefaultAction() { return m_animationDefaultAction.empty() ? nullptr : m_animationDefaultAction.c_str(); }
 	inline const Fixed &getAnimationScale() { return m_animationScale; }
 
+	// 逻辑帧内移动目标位置;
+	inline bool hasFrameMoveTarget() { return m_hasFrameMoveTarget; }
+	inline void setHasFrameMoveTarget(bool _hasFrameMoveTarget) { m_hasFrameMoveTarget = _hasFrameMoveTarget; }
+	inline const MapPoint &getFrameMoveTarget() { return m_frameMoveTarget; }
+	inline void setFrameMoveTarget(const MapPoint &point) { m_frameMoveTarget = point; }
+
 private:
 	typedef std::map<std::string, ObjectComponent *> ComponentMap;
 	typedef std::pair<std::string, ObjectComponent *> ComponentMapPair;
@@ -178,8 +172,6 @@ private:
 
 	MapPoint m_position;					// 对象位置;
 
-	bool m_desireMove;						// 对象是否想要移动;
-	MapPoint m_desiredPosition;				// 对象想要移动到的位置;
 
 	Fixed m_moveSpeed;						// 对象移动速度;
 
@@ -210,6 +202,9 @@ private:
 	std::string m_animationName;			// 动画名;
 	std::string m_animationDefaultAction;	// 默认动作名;
 	Fixed m_animationScale;					// 动画拉伸倍数;
+
+	bool m_hasFrameMoveTarget;				// 在逻辑帧内是否需要移动;
+	MapPoint m_frameMoveTarget;				// 在逻辑帧内移动的目标位置;
 };
 
 #endif // GameObject_h__
